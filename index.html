@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ เทศบาลตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+    >
+
+    <title>
+        ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ
+    </title>
+
+
+    <!-- CSS เดิม -->
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+
+    <!-- CSS สำหรับปุ่มเปลี่ยนภาษา -->
+    <style>
+
+        .language-switcher {
+
+            position: fixed;
+
+            top: 18px;
+            right: 20px;
+
+            z-index: 9999;
+
+            display: flex;
+
+            gap: 5px;
+
+            padding: 5px;
+
+            background:
+                rgba(255, 255, 255, 0.94);
+
+            border-radius: 999px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0, 0, 0, 0.18);
+
+            backdrop-filter:
+                blur(12px);
+
+        }
+
+
+        .lang-btn {
+
+            border: none;
+
+            background: transparent;
+
+            padding:
+                9px 16px;
+
+            border-radius:
+                999px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            color: #456773;
+
+            transition:
+                all 0.2s ease;
+
+        }
+
+
+        .lang-btn:hover {
+
+            background:
+                #eaf7fc;
+
+        }
+
+
+        .lang-btn.active {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #0077b6,
+                    #00a8cc
+                );
+
+            color: white;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 119, 182, 0.25);
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .language-switcher {
+
+                top: 10px;
+                right: 10px;
+
+            }
+
+
+            .lang-btn {
+
+                padding:
+                    7px 11px;
+
+                font-size:
+                    12px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+    <!-- =====================================================
+         ปุ่มภาษา
+    ====================================================== -->
+
+    <div class="language-switcher">
+
+        <button
+            class="lang-btn active"
+            data-lang="th"
+            onclick="changeLanguage('th')"
+        >
+            🇹🇭 ไทย
+        </button>
+
+
+        <button
+            class="lang-btn"
+            data-lang="en"
+            onclick="changeLanguage('en')"
+        >
+            🇬🇧 English
+        </button>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         หน้าปก
+    ====================================================== -->
+
+    <header class="hero">
+
+
+        <div class="hero-overlay"></div>
+
+
+        <div class="hero-content">
+
+
+            <img
+                src="images/logo.png"
+                alt="ตราเทศบาลตำบลวัดธาตุ"
+                class="municipality-logo"
+            >
+
+
+            <h1
+                data-th="เทศบาลตำบลวัดธาตุ"
+                data-en="Wat That Subdistrict Municipality"
+            >
+                เทศบาลตำบลวัดธาตุ
+            </h1>
+
+
+            <h2
+                data-th="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ"
+                data-en="Wat That Subdistrict Water & Weather Information Center"
+            >
+                ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ
+            </h2>
+
+
+            <p
+                data-th="อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+                data-en="Mueang Nong Khai District, Nong Khai Province"
+            >
+                อำเภอเมืองหนองคาย จังหวัดหนองคาย
+            </p>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         เนื้อหา
+    ====================================================== -->
+
+    <main>
+
+
+
+        <!-- =================================================
+             อากาศปัจจุบัน
+        ================================================== -->
+
+        <section class="weather-card">
+
+
+            <h2
+                data-th="🌤️ สภาพอากาศปัจจุบัน"
+                data-en="🌤️ Current Weather"
+            >
+                🌤️ สภาพอากาศปัจจุบัน
+            </h2>
+
+
+
+            <div class="temperature">
+
+                <span id="temperature">
+                    --
+                </span>°C
+
+            </div>
+
+
+
+            <p>
+
+                <span
+                    data-th="🌧️ ฝน:"
+                    data-en="🌧️ Rain:"
+                >
+                    🌧️ ฝน:
+                </span>
+
+                <strong>
+
+                    <span id="rain">
+                        --
+                    </span>
+
+                    mm
+
+                </strong>
+
+            </p>
+
+
+
+            <p>
+
+                <span
+                    data-th="💧 ความชื้น:"
+                    data-en="💧 Humidity:"
+                >
+                    💧 ความชื้น:
+                </span>
+
+                <strong>
+
+                    <span id="humidity">
+                        --
+                    </span>%
+
+                </strong>
+
+            </p>
+
+
+
+            <p>
+
+                <span
+                    data-th="💨 ความเร็วลม:"
+                    data-en="💨 Wind Speed:"
+                >
+                    💨 ความเร็วลม:
+                </span>
+
+                <strong>
+
+                    <span id="wind">
+                        --
+                    </span>
+
+                    km/h
+
+                </strong>
+
+            </p>
+
+
+
+            <p>
+
+                <span
+                    data-th="🕐 อัปเดตล่าสุด:"
+                    data-en="🕐 Last Updated:"
+                >
+                    🕐 อัปเดตล่าสุด:
+                </span>
+
+                <strong>
+
+                    <span id="update-time">
+                        --
+                    </span>
+
+                </strong>
+
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             สถานการณ์ฝน
+        ================================================== -->
+
+        <section
+            class="status-card"
+            id="status-card"
+        >
+
+
+            <h2
+                data-th="🌧️ สถานการณ์ฝนตำบลวัดธาตุ"
+                data-en="🌧️ Rain Situation in Wat That Subdistrict"
+            >
+                🌧️ สถานการณ์ฝนตำบลวัดธาตุ
+            </h2>
+
+
+            <div id="status">
+
+                กำลังตรวจสอบข้อมูล...
+
+            </div>
+
+
+            <p id="status-detail"></p>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             พยากรณ์ 7 วัน
+        ================================================== -->
+
+        <section class="forecast-section">
+
+
+            <h2
+                data-th="📅 พยากรณ์อากาศ 7 วัน"
+                data-en="📅 7-Day Weather Forecast"
+            >
+                📅 พยากรณ์อากาศ 7 วัน
+            </h2>
+
+
+            <div
+                id="forecast"
+                class="forecast-container"
+            >
+
+                กำลังโหลดข้อมูล...
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             อ่างเก็บน้ำบ้านเบิดใหญ่
+        ================================================== -->
+
+        <section class="reservoir-section">
+
+
+            <div class="reservoir-header">
+
+
+                <div>
+
+
+                    <h2
+                        data-th="🏞️ อ่างเก็บน้ำบ้านเบิดใหญ่"
+                        data-en="🏞️ Ban Boet Yai Reservoir"
+                    >
+                        🏞️ อ่างเก็บน้ำบ้านเบิดใหญ่
+                    </h2>
+
+
+                    <p
+                        data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+                        data-en="Wat That Subdistrict, Mueang Nong Khai District, Nong Khai Province"
+                    >
+                        ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย
+                    </p>
+
+
+                </div>
+
+
+
+                <div
+                    id="reservoir-status"
+                    class="reservoir-status"
+                >
+
+                    กำลังโหลด...
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="reservoir-main">
+
+
+                <div class="reservoir-percent">
+
+                    <span id="reservoir-percent">
+                        --
+                    </span>%
+
+                </div>
+
+
+                <p
+                    data-th="ของความจุอ่างเก็บน้ำ"
+                    data-en="of total reservoir capacity"
+                >
+                    ของความจุอ่างเก็บน้ำ
+                </p>
+
+
+
+                <div class="water-bar">
+
+                    <div
+                        class="water-bar-fill"
+                        id="water-bar-fill"
+                    >
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="reservoir-data">
+
+
+                <div>
+
+                    <span
+                        data-th="ความจุอ่าง"
+                        data-en="Reservoir Capacity"
+                    >
+                        ความจุอ่าง
+                    </span>
+
+                    <strong id="reservoir-capacity">
+                        -- ล้าน ลบ.ม.
+                    </strong>
+
+                </div>
+
+
+
+                <div>
+
+                    <span
+                        data-th="ปริมาณน้ำ"
+                        data-en="Current Water Volume"
+                    >
+                        ปริมาณน้ำ
+                    </span>
+
+                    <strong id="reservoir-volume">
+                        -- ล้าน ลบ.ม.
+                    </strong>
+
+                </div>
+
+
+
+                <div>
+
+                    <span
+                        data-th="ตรวจสอบข้อมูลล่าสุดเมื่อ"
+                        data-en="Last Data Check"
+                    >
+                        ตรวจสอบข้อมูลล่าสุดเมื่อ
+                    </span>
+
+                    <strong id="reservoir-update">
+                        --
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <p
+                class="reservoir-source"
+                data-th="ข้อมูล: ศูนย์ประมวลวิเคราะห์สถานการณ์น้ำ สำนักชลประทานที่ 5"
+                data-en="Source: Water Situation Analysis Center, Regional Irrigation Office 5"
+            >
+                ข้อมูล:
+                ศูนย์ประมวลวิเคราะห์สถานการณ์น้ำ
+                สำนักชลประทานที่ 5
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             แหล่งน้ำตำบลวัดธาตุ
+        ================================================== -->
+
+        <section class="local-water-section">
+
+
+            <div class="section-heading">
+
+
+                <h2
+                    data-th="💧 แหล่งน้ำในตำบลวัดธาตุ"
+                    data-en="💧 Water Sources in Wat That Subdistrict"
+                >
+                    💧 แหล่งน้ำในตำบลวัดธาตุ
+                </h2>
+
+
+                <p
+                    data-th="ข้อมูลสภาพอากาศและฝนบริเวณแหล่งน้ำสำคัญในพื้นที่ตำบลวัดธาตุ"
+                    data-en="Weather and rainfall information around major water sources in Wat That Subdistrict"
+                >
+                    ข้อมูลสภาพอากาศและฝนบริเวณแหล่งน้ำสำคัญ
+                    ในพื้นที่ตำบลวัดธาตุ
+                </p>
+
+
+            </div>
+
+
+
+            <div
+                id="water-locations"
+                class="water-grid"
+            >
+
+                <p>
+                    กำลังโหลดข้อมูลแหล่งน้ำ...
+                </p>
+
+            </div>
+
+
+
+            <p
+                class="water-note"
+                data-th="* ข้อมูลฝนและสภาพอากาศเป็นข้อมูลบริเวณจุดอ้างอิงของแต่ละแหล่งน้ำ ไม่ใช่ค่าระดับน้ำจากสถานีตรวจวัดโดยตรง"
+                data-en="* Weather and rainfall data are based on reference points near each water source and are not direct water-level measurements."
+            >
+                * ข้อมูลฝนและสภาพอากาศเป็นข้อมูลบริเวณจุดอ้างอิง
+                ของแต่ละแหล่งน้ำ ไม่ใช่ค่าระดับน้ำจากสถานีตรวจวัดโดยตรง
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             แม่น้ำโขง
+        ================================================== -->
+
+        <section class="mekong-live">
+
+
+            <h2
+                data-th="🌊 สถานการณ์แม่น้ำโขง"
+                data-en="🌊 Mekong River Situation"
+            >
+                🌊 สถานการณ์แม่น้ำโขง
+            </h2>
+
+
+
+            <p>
+
+                <span
+                    data-th="สถานีตรวจวัดหนองคาย"
+                    data-en="Nong Khai Monitoring Station"
+                >
+                    สถานีตรวจวัดหนองคาย
+                </span>
+
+                <br>
+
+                <span
+                    data-th="รหัสสถานี: 012001"
+                    data-en="Station Code: 012001"
+                >
+                    รหัสสถานี: 012001
+                </span>
+
+            </p>
+
+
+
+            <div
+                class="live-badge"
+                data-th="🟢 ข้อมูลจากสถานีตรวจวัด MRC"
+                data-en="🟢 Data from MRC Monitoring Station"
+            >
+                🟢 ข้อมูลจากสถานีตรวจวัด MRC
+            </div>
+
+
+
+            <iframe
+                src="https://monitoring.mrcmekong.org/station/012001"
+                class="mekong-frame"
+                title="สถานการณ์แม่น้ำโขง สถานีหนองคาย"
+                loading="lazy"
+            >
+            </iframe>
+
+
+
+            <p
+                class="source-note"
+                data-th="แหล่งข้อมูล: Mekong River Commission (MRC)"
+                data-en="Source: Mekong River Commission (MRC)"
+            >
+                แหล่งข้อมูล:
+                Mekong River Commission (MRC)
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             ติดต่อเทศบาล
+        ================================================== -->
+
+        <section class="contact-section">
+
+
+            <h2
+                data-th="🏛️ ติดต่อเทศบาลตำบลวัดธาตุ"
+                data-en="🏛️ Contact Wat That Subdistrict Municipality"
+            >
+                🏛️ ติดต่อเทศบาลตำบลวัดธาตุ
+            </h2>
+
+
+
+            <div class="contact-grid">
+
+
+                <!-- ที่อยู่ -->
+
+                <div class="contact-card">
+
+
+                    <div class="contact-icon">
+
+                        📍
+
+                    </div>
+
+
+                    <div>
+
+
+                        <span
+                            data-th="ที่อยู่"
+                            data-en="Address"
+                        >
+                            ที่อยู่
+                        </span>
+
+
+                        <strong
+                            data-th="เทศบาลตำบลวัดธาตุ"
+                            data-en="Wat That Subdistrict Municipality"
+                        >
+                            เทศบาลตำบลวัดธาตุ
+                        </strong>
+
+
+                        <p>
+
+                            <span
+                                data-th="เลขที่ 205 หมู่ที่ 10 บ้านสร้างประทาย (บึงหนองคาย)"
+                                data-en="205 Moo 10, Ban Sang Prathai (Bueng Nong Khai)"
+                            >
+                                เลขที่ 205 หมู่ที่ 10
+                                บ้านสร้างประทาย (บึงหนองคาย)
+                            </span>
+
+                            <br>
+
+                            <span
+                                data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+                                data-en="Wat That Subdistrict, Mueang Nong Khai District, Nong Khai Province, Thailand"
+                            >
+                                ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย
+                            </span>
+
+                        </p>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- เบอร์โทร -->
+
+                <div class="contact-card">
+
+
+                    <div class="contact-icon">
+
+                        ☎️
+
+                    </div>
+
+
+                    <div>
+
+
+                        <span
+                            data-th="เบอร์โทรศัพท์"
+                            data-en="Telephone"
+                        >
+                            เบอร์โทรศัพท์
+                        </span>
+
+
+                        <strong class="phone-number">
+
+                            042-414758
+
+                        </strong>
+
+
+                        <a
+                            href="tel:042414758"
+                            class="contact-button"
+                            data-th="☎️ โทรหาเทศบาล"
+                            data-en="☎️ Call Municipality"
+                        >
+                            ☎️ โทรหาเทศบาล
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 แผนที่
+            ================================================== -->
+
+            <div class="map-section">
+
+
+                <h3
+                    data-th="🗺️ แผนที่เทศบาลตำบลวัดธาตุ"
+                    data-en="🗺️ Wat That Subdistrict Municipality Map"
+                >
+                    🗺️ แผนที่เทศบาลตำบลวัดธาตุ
+                </h3>
+
+
+
+                <iframe
+                    class="municipality-map"
+                    src="https://www.google.com/maps?q=เทศบาลตำบลวัดธาตุ%20หนองคาย&output=embed"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="แผนที่เทศบาลตำบลวัดธาตุ"
+                >
+                </iframe>
+
+
+
+                <a
+                    href="https://www.google.com/maps/search/?api=1&query=เทศบาลตำบลวัดธาตุ+หนองคาย"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="map-button"
+                    data-th="📍 เปิด Google Maps เพื่อนำทาง"
+                    data-en="📍 Open Google Maps for Directions"
+                >
+                    📍 เปิด Google Maps เพื่อนำทาง
+                </a>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         JavaScript เดิมของเว็บ
+    ====================================================== -->
+
+    <script src="script.js"></script>
+
+
+
+    <!-- =====================================================
+         ระบบภาษา
+    ====================================================== -->
+
+    <script>
+
+        let currentLanguage = "th";
+
+
+        /* ==================================================
+           ข้อความที่ JavaScript เดิมสร้างขึ้นอัตโนมัติ
+        ================================================== */
+
+        const dynamicTranslations = {
+
+            "กำลังตรวจสอบข้อมูล...":
+                "Checking data...",
+
+            "กำลังโหลดข้อมูล...":
+                "Loading data...",
+
+            "กำลังโหลดข้อมูลแหล่งน้ำ...":
+                "Loading water source data...",
+
+            "🟢 สภาพอากาศปกติ":
+                "🟢 Normal Weather Conditions",
+
+            "🟡 เฝ้าระวังฝน":
+                "🟡 Rain Watch",
+
+            "🟠 มีฝนค่อนข้างมาก":
+                "🟠 Heavy Rainfall",
+
+            "🔴 ฝนตกหนัก":
+                "🔴 Heavy Rain",
+
+            "🟢 ปริมาณน้ำอยู่ในระดับสูง":
+                "🟢 High Water Storage",
+
+            "🟢 ปริมาณน้ำปานกลาง":
+                "🟢 Moderate Water Storage",
+
+            "🟠 ปริมาณน้ำสูง":
+                "🟠 High Water Level",
+
+            "🟡 ปริมาณน้ำน้อย":
+                "🟡 Low Water Storage",
+
+            "🔴 น้ำเต็มความจุ/เกินความจุ":
+                "🔴 Full / Above Capacity",
+
+            "⚪ ไม่สามารถโหลดข้อมูลได้":
+                "⚪ Unable to Load Data",
+
+
+            /* วัน */
+
+            "จ.":
+                "Mon",
+
+            "อ.":
+                "Tue",
+
+            "พ.":
+                "Wed",
+
+            "พฤ.":
+                "Thu",
+
+            "ศ.":
+                "Fri",
+
+            "ส.":
+                "Sat",
+
+            "อา.":
+                "Sun",
+
+
+            /* แหล่งน้ำ */
+
+            "บึงหนองคาย":
+                "Bueng Nong Khai",
+
+            "ลำห้วยยาง":
+                "Huai Yang Stream",
+
+            "อ่างเก็บน้ำบ้านเบิดใหญ่":
+                "Ban Boet Yai Reservoir",
+
+            "ห้วยจุ่มก้น":
+                "Huai Chum Kon",
+
+            "คลองหลุบบึ่ง":
+                "Khlong Lup Bueng",
+
+
+            /* พื้นที่ */
+
+            "บ้านสร้างประทาย หมู่ 10":
+                "Ban Sang Prathai, Moo 10",
+
+            "ช่วงบ้านเมืองบาง หมู่ 1":
+                "Ban Mueang Bang Area, Moo 1",
+
+            "บ้านเบิดใหญ่ หมู่ 6":
+                "Ban Boet Yai, Moo 6",
+
+            "บ้านทิพย์ธานี หมู่ 14":
+                "Ban Thip Thani, Moo 14",
+
+            "บ้านเบิดน้อย หมู่ 7":
+                "Ban Boet Noi, Moo 7",
+
+
+            /* ข้อมูลในการ์ด */
+
+            "🌡️ อุณหภูมิ":
+                "🌡️ Temperature",
+
+            "🌧️ ฝนปัจจุบัน":
+                "🌧️ Current Rainfall",
+
+            "☔ โอกาสฝน":
+                "☔ Rain Chance",
+
+            "💧 ความชื้น":
+                "💧 Humidity"
+
+        };
+
+
+
+        /* ==================================================
+           แปลข้อความที่มีตัวเลขเปลี่ยนตลอด
+        ================================================== */
+
+        function translateDynamicText(text) {
+
+            const cleanText =
+                text.trim();
+
+
+            if (
+                dynamicTranslations[
+                    cleanText
+                ]
+            ) {
+
+                return dynamicTranslations[
+                    cleanText
+                ];
+
+            }
+
+
+            /* โอกาสฝนวันนี้ */
+
+            let match =
+                cleanText.match(
+                    /^โอกาสฝนวันนี้\s*([\d.]+)%$/
+                );
+
+
+            if (match) {
+
+                return `Today's rain chance: ${match[1]}%`;
+
+            }
+
+
+            /* ฝนปัจจุบัน */
+
+            match =
+                cleanText.match(
+                    /^ฝนปัจจุบัน\s*([\d.]+)\s*มม\.$/
+                );
+
+
+            if (match) {
+
+                return `Current rainfall: ${match[1]} mm`;
+
+            }
+
+
+            /* ฝนหนัก */
+
+            match =
+                cleanText.match(
+                    /^ฝนปัจจุบัน\s*([\d.]+)\s*มม\.\s*ควรติดตามสถานการณ์อย่างใกล้ชิด$/
+                );
+
+
+            if (match) {
+
+                return `Current rainfall: ${match[1]} mm. Please monitor the situation closely.`;
+
+            }
+
+
+            /* จุดอ้างอิง */
+
+            if (
+                cleanText ===
+                "📍 จุดอ้างอิงบริเวณบึง"
+            ) {
+
+                return "📍 Reference point near the lake";
+
+            }
+
+
+            if (
+                cleanText ===
+                "📍 จุดอ้างอิงพื้นที่"
+            ) {
+
+                return "📍 Area reference point";
+
+            }
+
+
+            if (
+                cleanText ===
+                "📍 พิกัดอ้างอิงจากกรมชลประทาน"
+            ) {
+
+                return "📍 Reference coordinates from the Royal Irrigation Department";
+
+            }
+
+
+            if (
+                cleanText ===
+                "📍 จุดอ้างอิงพื้นที่หมู่บ้าน"
+            ) {
+
+                return "📍 Village-area reference point";
+
+            }
+
+
+            return cleanText;
+
+        }
+
+
+
+        /* ==================================================
+           Element ที่ข้อความเกิดจาก script.js
+        ================================================== */
+
+        const dynamicSelector = [
+
+            "#status",
+
+            "#status-detail",
+
+            "#reservoir-status",
+
+            ".forecast-card h3",
+
+            ".water-card-top h3",
+
+            ".water-card-top p",
+
+            ".water-weather span",
+
+            ".water-status",
+
+            ".water-location-note"
+
+        ].join(",");
+
+
+
+        /* ==================================================
+           แปลข้อความ Dynamic
+        ================================================== */
+
+        function updateDynamicLanguage() {
+
+
+            const elements =
+                document.querySelectorAll(
+                    dynamicSelector
+                );
+
+
+            elements.forEach(
+                element => {
+
+
+                    const currentText =
+                        element.textContent.trim();
+
+
+
+                    if (
+                        currentLanguage === "en"
+                    ) {
+
+
+                        /*
+                        ถ้าข้อความถูก script.js
+                        อัปเดตใหม่เป็นภาษาไทย
+                        ให้บันทึกค่าไทยใหม่
+                        */
+
+                        if (
+                            !element.dataset.enRendered ||
+                            currentText !==
+                            element.dataset.enRendered
+                        ) {
+
+                            element.dataset.thDynamic =
+                                currentText;
+
+                        }
+
+
+                        const thaiText =
+                            element.dataset.thDynamic ||
+                            currentText;
+
+
+                        const englishText =
+                            translateDynamicText(
+                                thaiText
+                            );
+
+
+                        if (
+                            englishText !==
+                            currentText
+                        ) {
+
+                            element.textContent =
+                                englishText;
+
+
+                            element.dataset.enRendered =
+                                englishText;
+
+                        }
+
+
+                    } else {
+
+
+                        if (
+                            element.dataset.thDynamic &&
+                            currentText ===
+                            element.dataset.enRendered
+                        ) {
+
+                            element.textContent =
+                                element.dataset.thDynamic;
+
+                        }
+
+
+                        delete element.dataset.enRendered;
+
+                    }
+
+
+                }
+            );
+
+        }
+
+
+
+        /* ==================================================
+           เปลี่ยนภาษา
+        ================================================== */
+
+        function changeLanguage(language) {
+
+
+            currentLanguage =
+                language;
+
+
+            /* ข้อความใน HTML */
+
+            const elements =
+                document.querySelectorAll(
+                    "[data-th][data-en]"
+                );
+
+
+            elements.forEach(
+                element => {
+
+
+                    if (
+                        language === "th"
+                    ) {
+
+                        element.textContent =
+                            element.dataset.th;
+
+                    } else {
+
+                        element.textContent =
+                            element.dataset.en;
+
+                    }
+
+
+                }
+            );
+
+
+
+            /* ปุ่มภาษา */
+
+            const buttons =
+                document.querySelectorAll(
+                    ".lang-btn"
+                );
+
+
+            buttons.forEach(
+                button => {
+
+
+                    button.classList.remove(
+                        "active"
+                    );
+
+
+                    if (
+                        button.dataset.lang ===
+                        language
+                    ) {
+
+                        button.classList.add(
+                            "active"
+                        );
+
+                    }
+
+
+                }
+            );
+
+
+
+            /* ภาษา HTML */
+
+            document.documentElement.lang =
+                language;
+
+
+
+            /* ชื่อ Tab */
+
+            if (
+                language === "th"
+            ) {
+
+                document.title =
+                    "ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ";
+
+            } else {
+
+                document.title =
+                    "Wat That Subdistrict Water & Weather Information Center";
+
+            }
+
+
+
+            /* Dynamic Text */
+
+            updateDynamicLanguage();
+
+
+
+            /* จำภาษาที่เลือก */
+
+            localStorage.setItem(
+                "watthat-language",
+                language
+            );
+
+        }
+
+
+
+        /* ==================================================
+           ตรวจจับข้อมูลใหม่ที่ script.js โหลดเข้ามา
+        ================================================== */
+
+        const observer =
+            new MutationObserver(
+                function () {
+
+                    if (
+                        currentLanguage === "en"
+                    ) {
+
+                        updateDynamicLanguage();
+
+                    }
+
+                }
+            );
+
+
+        observer.observe(
+            document.body,
+            {
+                childList: true,
+                subtree: true,
+                characterData: true
+            }
+        );
+
+
+
+        /* ==================================================
+           โหลดภาษาที่เคยเลือก
+        ================================================== */
+
+        const savedLanguage =
+            localStorage.getItem(
+                "watthat-language"
+            );
+
+
+        if (
+            savedLanguage === "en"
+        ) {
+
+            changeLanguage("en");
+
+        } else {
+
+            changeLanguage("th");
+
+        }
+
+
+
+        /*
+        ตรวจอีกครั้งหลังข้อมูลอากาศ
+        และข้อมูลน้ำโหลดมา
+        */
+
+        setTimeout(
+            updateDynamicLanguage,
+            1000
+        );
+
+
+        setTimeout(
+            updateDynamicLanguage,
+            3000
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>
