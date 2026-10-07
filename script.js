@@ -662,3 +662,184 @@ setInterval(
     loadReservoirData,
     30 * 60 * 1000
 );
+// =====================================
+// WEATHER RADAR
+// RainViewer + Leaflet
+// =====================================
+
+const radarMap =
+    L.map("weather-radar", {
+        zoomControl: true
+    })
+    .setView(
+        [17.88, 102.74],
+        7
+    );
+
+
+// แผนที่พื้นฐาน
+
+L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        attribution:
+            '&copy; OpenStreetMap contributors'
+    }
+).addTo(radarMap);
+
+
+// จุดตำบลวัดธาตุ
+
+L.marker(
+    [17.88, 102.74]
+)
+.addTo(radarMap)
+.bindPopup(
+    "เทศบาลตำบลวัดธาตุ<br>Wat That Subdistrict"
+);
+
+
+// Layer radar ปัจจุบัน
+
+let radarLayer = null;
+
+
+// =====================================
+// โหลดข้อมูล Radar
+// =====================================
+
+async function loadWeatherRadar() {
+
+    try {
+
+        const response =
+            await fetch(
+                "https://api.rainviewer.com/public/weather-maps.json"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Cannot load radar data"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const frames =
+            data.radar.past;
+
+
+        if (
+            !frames ||
+            frames.length === 0
+        ) {
+
+            throw new Error(
+                "No radar frames available"
+            );
+
+        }
+
+
+        // เลือกภาพล่าสุด
+
+        const latest =
+            frames[
+                frames.length - 1
+            ];
+
+
+        // ลบ radar เก่า
+
+        if (radarLayer) {
+
+            radarMap.removeLayer(
+                radarLayer
+            );
+
+        }
+
+
+        // เพิ่ม radar ใหม่
+
+        radarLayer =
+            L.tileLayer(
+                `${data.host}${latest.path}/256/{z}/{x}/{y}/2/1_0.png`,
+                {
+                    opacity: 0.65,
+                    maxZoom: 7,
+                    attribution:
+                        'Radar data © RainViewer'
+                }
+            );
+
+
+        radarLayer.addTo(
+            radarMap
+        );
+
+
+        // เวลา Radar
+
+        const radarDate =
+            new Date(
+                latest.time * 1000
+            );
+
+
+        document.getElementById(
+            "radar-time"
+        ).textContent =
+            radarDate.toLocaleString(
+                currentLanguage === "en"
+                    ? "en-GB"
+                    : "th-TH",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    day: "numeric",
+                    month: "short"
+                }
+            );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Radar error:",
+            error
+        );
+
+
+        document.getElementById(
+            "radar-time"
+        ).textContent =
+            currentLanguage === "en"
+                ? "Unable to load radar"
+                : "ไม่สามารถโหลดเรดาร์ได้";
+
+    }
+
+}
+
+
+// โหลดครั้งแรก
+
+loadWeatherRadar();
+
+
+// โหลดข้อมูลใหม่ทุก 10 นาที
+
+setInterval(
+    loadWeatherRadar,
+    10 * 60 * 1000
+);

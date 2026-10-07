@@ -1529,3 +1529,136 @@ section h2 {
     }
 
 }
+/* =====================================
+   Weather Radar
+===================================== */
+
+.radar-section {
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #edf9ff
+        );
+
+    border-radius: 28px;
+
+    padding: 32px;
+
+    margin: 25px 0;
+
+    border: 1px solid #d9eef7;
+
+    box-shadow:
+        0 12px 35px
+        rgba(0, 80, 120, 0.09);
+}
+
+
+.radar-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+.radar-header h2 {
+    margin-bottom: 5px;
+}
+
+
+.radar-header p {
+    margin: 0;
+
+    color: #6d8793;
+}
+
+
+.radar-live {
+    padding: 8px 14px;
+
+    border-radius: 999px;
+
+    background: #ffe7e7;
+
+    color: #b71c1c;
+
+    font-weight: 800;
+
+    font-size: 13px;
+}
+
+
+#weather-radar {
+    width: 100%;
+
+    height: 480px;
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0, 70, 100, 0.12);
+}
+
+
+.radar-bottom {
+    margin-top: 15px;
+
+    padding: 12px 15px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    color: #536d79;
+}
+
+
+.radar-source {
+    margin-top: 12px;
+
+    font-size: 12px;
+
+    color: #78909c;
+
+    text-align: right;
+}
+
+
+.radar-source a {
+    color: #0077b6;
+
+    text-decoration: none;
+
+    font-weight: 700;
+}
+
+
+@media (max-width: 600px) {
+
+    .radar-section {
+        padding: 20px;
+    }
+
+
+    .radar-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    #weather-radar {
+        height: 380px;
+    }
+
+}
