@@ -750,23 +750,31 @@ async function loadReservoir() {
     try {
 
         const response =
-            await fetch("/api/berd-yai-reservoir");
+            await fetch(
+                "/api/reservoir",
+                {
+                    cache: "no-store"
+                }
+            );
 
+        if (!response.ok) {
+            throw new Error(
+                `HTTP ${response.status}`
+            );
+        }
 
         const result =
             await response.json();
 
-
         if (!result.success) {
             throw new Error(
-                result.message
+                result.message ||
+                "Reservoir API error"
             );
         }
 
-
         reservoirData =
             result.data;
-
 
         renderReservoir();
 
@@ -774,7 +782,10 @@ async function loadReservoir() {
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Reservoir error:",
+            error
+        );
 
         document.getElementById(
             "reservoir-status"
