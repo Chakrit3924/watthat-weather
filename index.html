@@ -2,7 +2,6 @@
 <html lang="th">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -15,252 +14,36 @@
         content="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ เทศบาลตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
     >
 
-    <title>
-        ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ
-    </title>
+    <title>ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ</title>
 
-
-    <!-- CSS หลัก -->
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
-
-    <!-- Leaflet สำหรับแผนที่เรดาร์ -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
-
-    <!-- ปุ่มเลือกภาษา -->
-    <style>
-
-        .language-switcher {
-            position: fixed;
-            top: 18px;
-            right: 20px;
-            z-index: 9999;
-
-            display: flex;
-            gap: 5px;
-
-            padding: 5px;
-
-            background: rgba(255, 255, 255, 0.94);
-
-            border-radius: 999px;
-
-            box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.18);
-
-            backdrop-filter: blur(12px);
-        }
-
-
-        .lang-btn {
-            border: none;
-            background: transparent;
-
-            padding: 9px 16px;
-
-            border-radius: 999px;
-
-            cursor: pointer;
-
-            font-size: 14px;
-            font-weight: 700;
-
-            color: #456773;
-
-            transition: all 0.2s ease;
-        }
-
-
-        .lang-btn:hover {
-            background: #eaf7fc;
-        }
-
-
-        .lang-btn.active {
-            background:
-                linear-gradient(
-                    90deg,
-                    #0077b6,
-                    #00a8cc
-                );
-
-            color: white;
-
-            box-shadow:
-                0 4px 12px rgba(0, 119, 182, 0.25);
-        }
-
-
-        /* =========================
-           RADAR
-        ========================= */
-
-        .radar-section {
-            background:
-                linear-gradient(
-                    145deg,
-                    #ffffff,
-                    #edf9ff
-                );
-
-            border-radius: 28px;
-
-            padding: 32px;
-
-            margin: 25px 0;
-
-            border: 1px solid #d9eef7;
-
-            box-shadow:
-                0 12px 35px rgba(0, 80, 120, 0.09);
-        }
-
-
-        .radar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            gap: 20px;
-
-            margin-bottom: 20px;
-        }
-
-
-        .radar-header h2 {
-            margin-bottom: 5px;
-        }
-
-
-        .radar-header p {
-            margin: 0;
-            color: #6d8793;
-        }
-
-
-        .radar-live {
-            padding: 8px 14px;
-
-            border-radius: 999px;
-
-            background: #ffe7e7;
-            color: #b71c1c;
-
-            font-weight: 800;
-            font-size: 13px;
-        }
-
-
-        #weather-radar {
-            width: 100%;
-            height: 480px;
-
-            border-radius: 22px;
-
-            overflow: hidden;
-
-            box-shadow:
-                0 8px 24px rgba(0, 70, 100, 0.12);
-        }
-
-
-        .radar-bottom {
-            margin-top: 15px;
-
-            padding: 12px 15px;
-
-            background: white;
-
-            border-radius: 14px;
-
-            color: #536d79;
-        }
-
-
-        .radar-source {
-            margin-top: 12px;
-
-            font-size: 12px;
-
-            color: #78909c;
-
-            text-align: right;
-        }
-
-
-        .radar-source a {
-            color: #0077b6;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-
-        @media (max-width: 600px) {
-
-            .language-switcher {
-                top: 10px;
-                right: 10px;
-            }
-
-
-            .lang-btn {
-                padding: 7px 11px;
-                font-size: 12px;
-            }
-
-
-            .radar-section {
-                padding: 20px;
-            }
-
-
-            .radar-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-
-            #weather-radar {
-                height: 380px;
-            }
-
-        }
-
-    </style>
-
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
-
 
 
 <body>
 
-
-    <!-- =========================================
-         เลือกภาษา
-    ========================================== -->
+    <!-- ภาษา -->
 
     <div class="language-switcher">
 
         <button
             class="lang-btn active"
             data-lang="th"
-            onclick="changeLanguage('th')"
         >
             🇹🇭 ไทย
         </button>
 
-
         <button
             class="lang-btn"
             data-lang="en"
-            onclick="changeLanguage('en')"
         >
             🇬🇧 English
         </button>
@@ -268,15 +51,11 @@
     </div>
 
 
-
-    <!-- =========================================
-         หน้าปก
-    ========================================== -->
+    <!-- หน้าปก -->
 
     <header class="hero">
 
         <div class="hero-overlay"></div>
-
 
         <div class="hero-content">
 
@@ -286,7 +65,6 @@
                 class="municipality-logo"
             >
 
-
             <h1
                 data-th="เทศบาลตำบลวัดธาตุ"
                 data-en="Wat That Subdistrict Municipality"
@@ -294,14 +72,12 @@
                 เทศบาลตำบลวัดธาตุ
             </h1>
 
-
             <h2
                 data-th="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ"
-                data-en="Wat That Subdistrict Water & Weather Information Center"
+                data-en="Wat That Water & Weather Information Center"
             >
                 ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ
             </h2>
-
 
             <p
                 data-th="อำเภอเมืองหนองคาย จังหวัดหนองคาย"
@@ -315,129 +91,164 @@
     </header>
 
 
-
     <main>
 
 
-        <!-- =========================================
-             อากาศปัจจุบัน
-        ========================================== -->
+        <!-- อากาศปัจจุบัน -->
 
-        <section class="weather-card">
+        <section class="main-card weather-section">
 
-            <h2
-                data-th="🌤️ สภาพอากาศปัจจุบัน"
-                data-en="🌤️ Current Weather"
-            >
-                🌤️ สภาพอากาศปัจจุบัน
-            </h2>
+            <div class="section-header">
 
+                <div>
+                    <p
+                        class="section-kicker"
+                        data-th="สภาพอากาศ"
+                        data-en="Weather"
+                    >
+                        สภาพอากาศ
+                    </p>
 
-            <div class="temperature">
-                <span id="temperature">--</span>°C
+                    <h2
+                        data-th="🌤️ สภาพอากาศปัจจุบัน"
+                        data-en="🌤️ Current Weather"
+                    >
+                        🌤️ สภาพอากาศปัจจุบัน
+                    </h2>
+                </div>
+
+                <span class="update-badge">
+                    ● LIVE DATA
+                </span>
+
             </div>
 
 
-            <p>
-
-                <span
-                    data-th="🌧️ ฝน:"
-                    data-en="🌧️ Rain:"
-                >
-                    🌧️ ฝน:
-                </span>
-
-                <strong>
-                    <span id="rain">--</span> mm
-                </strong>
-
-            </p>
+            <div class="temperature">
+                <span id="temperature">--</span><small>°C</small>
+            </div>
 
 
-            <p>
+            <div class="weather-grid">
 
-                <span
-                    data-th="💧 ความชื้น:"
-                    data-en="💧 Humidity:"
-                >
-                    💧 ความชื้น:
-                </span>
+                <div class="info-box">
+                    <span>🌧️</span>
 
-                <strong>
-                    <span id="humidity">--</span>%
-                </strong>
+                    <div>
+                        <small
+                            data-th="ฝนปัจจุบัน"
+                            data-en="Current Rain"
+                        >
+                            ฝนปัจจุบัน
+                        </small>
 
-            </p>
-
-
-            <p>
-
-                <span
-                    data-th="💨 ความเร็วลม:"
-                    data-en="💨 Wind Speed:"
-                >
-                    💨 ความเร็วลม:
-                </span>
-
-                <strong>
-                    <span id="wind">--</span> km/h
-                </strong>
-
-            </p>
+                        <strong>
+                            <span id="rain">--</span> mm
+                        </strong>
+                    </div>
+                </div>
 
 
-            <p>
+                <div class="info-box">
+                    <span>💧</span>
 
-                <span
-                    data-th="🕐 อัปเดตล่าสุด:"
-                    data-en="🕐 Last Updated:"
-                >
-                    🕐 อัปเดตล่าสุด:
-                </span>
+                    <div>
+                        <small
+                            data-th="ความชื้น"
+                            data-en="Humidity"
+                        >
+                            ความชื้น
+                        </small>
 
-                <strong>
-                    <span id="update-time">--</span>
-                </strong>
+                        <strong>
+                            <span id="humidity">--</span>%
+                        </strong>
+                    </div>
+                </div>
 
-            </p>
+
+                <div class="info-box">
+                    <span>💨</span>
+
+                    <div>
+                        <small
+                            data-th="ความเร็วลม"
+                            data-en="Wind Speed"
+                        >
+                            ความเร็วลม
+                        </small>
+
+                        <strong>
+                            <span id="wind">--</span> km/h
+                        </strong>
+                    </div>
+                </div>
+
+
+                <div class="info-box">
+                    <span>🕐</span>
+
+                    <div>
+                        <small
+                            data-th="อัปเดตล่าสุด"
+                            data-en="Last Updated"
+                        >
+                            อัปเดตล่าสุด
+                        </small>
+
+                        <strong id="update-time">
+                            --
+                        </strong>
+                    </div>
+                </div>
+
+            </div>
 
         </section>
 
 
-
-        <!-- =========================================
-             สถานการณ์ฝน
-        ========================================== -->
+        <!-- สถานการณ์ฝน -->
 
         <section
-            class="status-card"
+            class="main-card status-card"
             id="status-card"
         >
 
+            <p
+                class="section-kicker"
+                data-th="การเฝ้าระวัง"
+                data-en="Monitoring"
+            >
+                การเฝ้าระวัง
+            </p>
+
             <h2
                 data-th="🌧️ สถานการณ์ฝนตำบลวัดธาตุ"
-                data-en="🌧️ Rain Situation in Wat That Subdistrict"
+                data-en="🌧️ Rain Situation in Wat That"
             >
                 🌧️ สถานการณ์ฝนตำบลวัดธาตุ
             </h2>
 
-
-            <div id="status">
+            <div id="status" class="big-status">
                 กำลังตรวจสอบข้อมูล...
             </div>
-
 
             <p id="status-detail"></p>
 
         </section>
 
 
+        <!-- พยากรณ์ -->
 
-        <!-- =========================================
-             พยากรณ์ 7 วัน
-        ========================================== -->
+        <section class="main-card">
 
-        <section class="forecast-section">
+            <p
+                class="section-kicker"
+                data-th="พยากรณ์"
+                data-en="Forecast"
+            >
+                พยากรณ์
+            </p>
 
             <h2
                 data-th="📅 พยากรณ์อากาศ 7 วัน"
@@ -446,10 +257,9 @@
                 📅 พยากรณ์อากาศ 7 วัน
             </h2>
 
-
             <div
                 id="forecast"
-                class="forecast-container"
+                class="forecast-grid"
             >
                 กำลังโหลดข้อมูล...
             </div>
@@ -457,39 +267,44 @@
         </section>
 
 
+        <!-- RADAR -->
 
-        <!-- =========================================
-             เรดาร์ฝน
-        ========================================== -->
+        <section class="main-card radar-section">
 
-        <section class="radar-section">
-
-
-            <div class="radar-header">
+            <div class="section-header">
 
                 <div>
-
-                    <h2
-                        data-th="🌧️ เรดาร์ตรวจจับฝน"
-                        data-en="🌧️ Weather Radar"
-                    >
-                        🌧️ เรดาร์ตรวจจับฝน
-                    </h2>
-
-
                     <p
-                        data-th="ติดตามกลุ่มฝนบริเวณตำบลวัดธาตุและพื้นที่ใกล้เคียง"
-                        data-en="Track rainfall around Wat That Subdistrict and nearby areas"
+                        class="section-kicker"
+                        data-th="เรดาร์ฝน"
+                        data-en="Weather Radar"
                     >
-                        ติดตามกลุ่มฝนบริเวณตำบลวัดธาตุและพื้นที่ใกล้เคียง
+                        เรดาร์ฝน
                     </p>
 
+                    <h2
+                        data-th="🌧️ เรดาร์ตรวจจับกลุ่มฝน"
+                        data-en="🌧️ Animated Rain Radar"
+                    >
+                        🌧️ เรดาร์ตรวจจับกลุ่มฝน
+                    </h2>
+
+                    <p
+                        class="section-description"
+                        data-th="ภาพเคลื่อนไหวเรดาร์ล่าสุดบริเวณตำบลวัดธาตุและพื้นที่ใกล้เคียง"
+                        data-en="Latest animated radar around Wat That Subdistrict and nearby areas"
+                    >
+                        ภาพเคลื่อนไหวเรดาร์ล่าสุดบริเวณตำบลวัดธาตุและพื้นที่ใกล้เคียง
+                    </p>
                 </div>
 
 
-                <div class="radar-live">
+                <span
+                    class="radar-badge"
+                    id="radar-badge"
+                >
                     🔴 RADAR
-                </div>
+                </span>
 
             </div>
 
@@ -497,52 +312,63 @@
             <div id="weather-radar"></div>
 
 
-            <div class="radar-bottom">
+            <div class="radar-controls">
 
-                🕐
-
-                <span
-                    data-th="ข้อมูลเรดาร์ล่าสุด:"
-                    data-en="Latest radar:"
+                <button
+                    id="radar-play"
+                    class="radar-button"
                 >
-                    ข้อมูลเรดาร์ล่าสุด:
-                </span>
+                    ⏸ หยุด
+                </button>
 
-                <strong id="radar-time">
-                    --
-                </strong>
+
+                <div class="radar-time-box">
+
+                    <span
+                        data-th="เวลาของภาพ:"
+                        data-en="Radar frame:"
+                    >
+                        เวลาของภาพ:
+                    </span>
+
+                    <strong id="radar-time">
+                        --
+                    </strong>
+
+                </div>
 
             </div>
 
 
-            <p class="radar-source">
-
-                Weather radar data by
-
+            <p class="source-text">
+                Weather radar data ©
                 <a
                     href="https://www.rainviewer.com/"
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener"
                 >
                     RainViewer
                 </a>
-
             </p>
 
         </section>
 
 
+        <!-- อ่างเก็บน้ำ -->
 
-        <!-- =========================================
-             อ่างเก็บน้ำบ้านเบิดใหญ่
-        ========================================== -->
+        <section class="main-card reservoir-section">
 
-        <section class="reservoir-section">
-
-
-            <div class="reservoir-header">
+            <div class="section-header">
 
                 <div>
+
+                    <p
+                        class="section-kicker"
+                        data-th="สถานการณ์น้ำ"
+                        data-en="Water Situation"
+                    >
+                        สถานการณ์น้ำ
+                    </p>
 
                     <h2
                         data-th="🏞️ อ่างเก็บน้ำบ้านเบิดใหญ่"
@@ -551,8 +377,8 @@
                         🏞️ อ่างเก็บน้ำบ้านเบิดใหญ่
                     </h2>
 
-
                     <p
+                        class="section-description"
                         data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
                         data-en="Wat That Subdistrict, Mueang Nong Khai District, Nong Khai Province"
                     >
@@ -562,19 +388,17 @@
                 </div>
 
 
-                <div
+                <span
                     id="reservoir-status"
                     class="reservoir-status"
                 >
                     กำลังโหลด...
-                </div>
+                </span>
 
             </div>
 
 
-
-            <div class="reservoir-main">
-
+            <div class="reservoir-center">
 
                 <div class="reservoir-percent">
 
@@ -583,7 +407,6 @@
                     </span>%
 
                 </div>
-
 
                 <p
                     data-th="ของความจุอ่างเก็บน้ำ"
@@ -596,8 +419,8 @@
                 <div class="water-bar">
 
                     <div
-                        class="water-bar-fill"
                         id="water-bar-fill"
+                        class="water-bar-fill"
                     >
                     </div>
 
@@ -606,134 +429,121 @@
             </div>
 
 
+            <div class="reservoir-grid">
 
-            <div class="reservoir-data">
-
-
-                <div>
-
-                    <span
+                <div class="data-box">
+                    <small
                         data-th="ความจุอ่าง"
-                        data-en="Reservoir Capacity"
+                        data-en="Capacity"
                     >
                         ความจุอ่าง
-                    </span>
+                    </small>
 
                     <strong id="reservoir-capacity">
-                        -- ล้าน ลบ.ม.
+                        --
                     </strong>
-
                 </div>
 
 
-
-                <div>
-
-                    <span
+                <div class="data-box">
+                    <small
                         data-th="ปริมาณน้ำ"
-                        data-en="Current Water Volume"
+                        data-en="Water Volume"
                     >
                         ปริมาณน้ำ
-                    </span>
+                    </small>
 
                     <strong id="reservoir-volume">
-                        -- ล้าน ลบ.ม.
+                        --
                     </strong>
-
                 </div>
 
 
-
-                <div>
-
-                    <span
-                        data-th="ตรวจสอบข้อมูลล่าสุดเมื่อ"
-                        data-en="Last Data Check"
+                <div class="data-box">
+                    <small
+                        data-th="ตรวจสอบต้นทางเมื่อ"
+                        data-en="Source Checked"
                     >
-                        ตรวจสอบข้อมูลล่าสุดเมื่อ
-                    </span>
+                        ตรวจสอบต้นทางเมื่อ
+                    </small>
 
                     <strong id="reservoir-update">
                         --
                     </strong>
-
                 </div>
 
             </div>
 
 
-
             <p
-                class="reservoir-source"
+                class="source-text"
                 data-th="ข้อมูล: ศูนย์ประมวลวิเคราะห์สถานการณ์น้ำ สำนักชลประทานที่ 5"
                 data-en="Source: Water Situation Analysis Center, Regional Irrigation Office 5"
             >
-                ข้อมูล:
-                ศูนย์ประมวลวิเคราะห์สถานการณ์น้ำ
-                สำนักชลประทานที่ 5
+                ข้อมูล: ศูนย์ประมวลวิเคราะห์สถานการณ์น้ำ สำนักชลประทานที่ 5
             </p>
 
         </section>
 
 
+        <!-- แหล่งน้ำ -->
 
-        <!-- =========================================
-             แหล่งน้ำตำบลวัดธาตุ
-        ========================================== -->
+        <section class="main-card">
 
-        <section class="local-water-section">
+            <p
+                class="section-kicker"
+                data-th="พื้นที่เฝ้าระวัง"
+                data-en="Local Water Sources"
+            >
+                พื้นที่เฝ้าระวัง
+            </p>
 
+            <h2
+                data-th="💧 แหล่งน้ำในตำบลวัดธาตุ"
+                data-en="💧 Water Sources in Wat That Subdistrict"
+            >
+                💧 แหล่งน้ำในตำบลวัดธาตุ
+            </h2>
 
-            <div class="section-heading">
-
-                <h2
-                    data-th="💧 แหล่งน้ำในตำบลวัดธาตุ"
-                    data-en="💧 Water Sources in Wat That Subdistrict"
-                >
-                    💧 แหล่งน้ำในตำบลวัดธาตุ
-                </h2>
-
-
-                <p
-                    data-th="ข้อมูลสภาพอากาศและฝนบริเวณแหล่งน้ำสำคัญในพื้นที่ตำบลวัดธาตุ"
-                    data-en="Weather and rainfall information around major water sources in Wat That Subdistrict"
-                >
-                    ข้อมูลสภาพอากาศและฝนบริเวณแหล่งน้ำสำคัญ
-                    ในพื้นที่ตำบลวัดธาตุ
-                </p>
-
-            </div>
+            <p
+                class="section-description"
+                data-th="ข้อมูลฝนและสภาพอากาศบริเวณจุดอ้างอิงของแหล่งน้ำสำคัญ"
+                data-en="Weather and rainfall around reference points of major local water sources"
+            >
+                ข้อมูลฝนและสภาพอากาศบริเวณจุดอ้างอิงของแหล่งน้ำสำคัญ
+            </p>
 
 
             <div
                 id="water-locations"
                 class="water-grid"
             >
-                <p>
-                    กำลังโหลดข้อมูลแหล่งน้ำ...
-                </p>
+                กำลังโหลดข้อมูล...
             </div>
 
 
             <p
-                class="water-note"
-                data-th="* ข้อมูลฝนและสภาพอากาศเป็นข้อมูลบริเวณจุดอ้างอิงของแต่ละแหล่งน้ำ ไม่ใช่ค่าระดับน้ำจากสถานีตรวจวัดโดยตรง"
-                data-en="* Weather and rainfall data are based on reference points near each water source and are not direct water-level measurements."
+                class="notice"
+                data-th="* ข้อมูลส่วนนี้เป็นข้อมูลอากาศบริเวณจุดอ้างอิง ไม่ใช่เครื่องวัดระดับน้ำโดยตรง"
+                data-en="* These are weather reference points, not direct water-level gauges."
             >
-                * ข้อมูลฝนและสภาพอากาศเป็นข้อมูลบริเวณจุดอ้างอิง
-                ของแต่ละแหล่งน้ำ ไม่ใช่ค่าระดับน้ำจากสถานีตรวจวัดโดยตรง
+                * ข้อมูลส่วนนี้เป็นข้อมูลอากาศบริเวณจุดอ้างอิง ไม่ใช่เครื่องวัดระดับน้ำโดยตรง
             </p>
 
         </section>
 
 
+        <!-- แม่น้ำโขง -->
 
-        <!-- =========================================
-             แม่น้ำโขง
-        ========================================== -->
+        <section class="main-card">
 
-        <section class="mekong-live">
-
+            <p
+                class="section-kicker"
+                data-th="แม่น้ำโขง"
+                data-en="Mekong River"
+            >
+                แม่น้ำโขง
+            </p>
 
             <h2
                 data-th="🌊 สถานการณ์แม่น้ำโขง"
@@ -743,124 +553,109 @@
             </h2>
 
 
-            <p>
+            <div class="mekong-grid">
 
-                <span
-                    data-th="สถานีตรวจวัดหนองคาย"
-                    data-en="Nong Khai Monitoring Station"
-                >
-                    สถานีตรวจวัดหนองคาย
-                </span>
+                <div class="data-box">
+                    <small
+                        data-th="สถานี"
+                        data-en="Station"
+                    >
+                        สถานี
+                    </small>
 
-                <br>
-
-                <span
-                    data-th="รหัสสถานี: 012001"
-                    data-en="Station Code: 012001"
-                >
-                    รหัสสถานี: 012001
-                </span>
-
-            </p>
+                    <strong
+                        data-th="หนองคาย"
+                        data-en="Nong Khai"
+                    >
+                        หนองคาย
+                    </strong>
+                </div>
 
 
-            <div
-                class="live-badge"
-                data-th="🟢 ข้อมูลจากสถานีตรวจวัด MRC"
-                data-en="🟢 Data from MRC Monitoring Station"
-            >
-                🟢 ข้อมูลจากสถานีตรวจวัด MRC
+                <div class="data-box">
+                    <small
+                        data-th="รหัสสถานี"
+                        data-en="Station Code"
+                    >
+                        รหัสสถานี
+                    </small>
+
+                    <strong>
+                        012001
+                    </strong>
+                </div>
+
             </div>
 
 
-            <iframe
-                src="https://monitoring.mrcmekong.org/station/012001"
-                class="mekong-frame"
-                title="สถานการณ์แม่น้ำโขง สถานีหนองคาย"
-                loading="lazy"
+            <a
+                class="primary-button"
+                href="https://monitoring.mrcmekong.org/station/012001"
+                target="_blank"
+                rel="noopener"
+                data-th="🌊 เปิดข้อมูลสถานีแม่น้ำโขง"
+                data-en="🌊 Open Mekong River Station"
             >
-            </iframe>
+                🌊 เปิดข้อมูลสถานีแม่น้ำโขง
+            </a>
 
 
-            <p
-                class="source-note"
-                data-th="แหล่งข้อมูล: Mekong River Commission (MRC)"
-                data-en="Source: Mekong River Commission (MRC)"
-            >
-                แหล่งข้อมูล:
+            <p class="source-text">
                 Mekong River Commission (MRC)
             </p>
 
         </section>
 
 
+        <!-- ติดต่อ -->
 
-        <!-- =========================================
-             ติดต่อเทศบาล
-        ========================================== -->
+        <section class="main-card">
 
-        <section class="contact-section">
-
+            <p
+                class="section-kicker"
+                data-th="ติดต่อเรา"
+                data-en="Contact"
+            >
+                ติดต่อเรา
+            </p>
 
             <h2
-                data-th="🏛️ ติดต่อเทศบาลตำบลวัดธาตุ"
-                data-en="🏛️ Contact Wat That Subdistrict Municipality"
+                data-th="🏛️ เทศบาลตำบลวัดธาตุ"
+                data-en="🏛️ Wat That Subdistrict Municipality"
             >
-                🏛️ ติดต่อเทศบาลตำบลวัดธาตุ
+                🏛️ เทศบาลตำบลวัดธาตุ
             </h2>
-
 
 
             <div class="contact-grid">
 
-
-                <!-- ที่อยู่ -->
-
                 <div class="contact-card">
-
 
                     <div class="contact-icon">
                         📍
                     </div>
 
-
                     <div>
 
-                        <span
+                        <small
                             data-th="ที่อยู่"
                             data-en="Address"
                         >
                             ที่อยู่
-                        </span>
-
+                        </small>
 
                         <strong
-                            data-th="เทศบาลตำบลวัดธาตุ"
-                            data-en="Wat That Subdistrict Municipality"
+                            data-th="205 หมู่ 10 บ้านสร้างประทาย (บึงหนองคาย)"
+                            data-en="205 Moo 10, Ban Sang Prathai (Bueng Nong Khai)"
                         >
-                            เทศบาลตำบลวัดธาตุ
+                            205 หมู่ 10 บ้านสร้างประทาย (บึงหนองคาย)
                         </strong>
 
-
-                        <p>
-
-                            <span
-                                data-th="เลขที่ 205 หมู่ที่ 10 บ้านสร้างประทาย (บึงหนองคาย)"
-                                data-en="205 Moo 10, Ban Sang Prathai (Bueng Nong Khai)"
-                            >
-                                เลขที่ 205 หมู่ที่ 10
-                                บ้านสร้างประทาย (บึงหนองคาย)
-                            </span>
-
-                            <br>
-
-                            <span
-                                data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
-                                data-en="Wat That Subdistrict, Mueang Nong Khai District, Nong Khai Province, Thailand"
-                            >
-                                ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย
-                            </span>
-
+                        <p
+                            data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+                            data-en="Wat That Subdistrict, Mueang Nong Khai District, Nong Khai Province"
+                        >
+                            ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย
                         </p>
 
                     </div>
@@ -868,39 +663,32 @@
                 </div>
 
 
-
-                <!-- โทรศัพท์ -->
-
                 <div class="contact-card">
-
 
                     <div class="contact-icon">
                         ☎️
                     </div>
 
-
                     <div>
 
-                        <span
-                            data-th="เบอร์โทรศัพท์"
+                        <small
+                            data-th="โทรศัพท์"
                             data-en="Telephone"
                         >
-                            เบอร์โทรศัพท์
-                        </span>
+                            โทรศัพท์
+                        </small>
 
-
-                        <strong class="phone-number">
+                        <strong class="phone">
                             042-414758
                         </strong>
 
-
                         <a
                             href="tel:042414758"
-                            class="contact-button"
-                            data-th="☎️ โทรหาเทศบาล"
-                            data-en="☎️ Call Municipality"
+                            class="small-button"
+                            data-th="โทรหาเทศบาล"
+                            data-en="Call Municipality"
                         >
-                            ☎️ โทรหาเทศบาล
+                            โทรหาเทศบาล
                         </a>
 
                     </div>
@@ -910,45 +698,35 @@
             </div>
 
 
-
-            <!-- =========================================
-                 แผนที่เทศบาล
-            ========================================== -->
-
-            <div class="map-section">
-
-
-                <h3
-                    data-th="🗺️ แผนที่เทศบาลตำบลวัดธาตุ"
-                    data-en="🗺️ Wat That Subdistrict Municipality Map"
-                >
-                    🗺️ แผนที่เทศบาลตำบลวัดธาตุ
-                </h3>
+            <h3
+                class="map-title"
+                data-th="🗺️ แผนที่เทศบาลตำบลวัดธาตุ"
+                data-en="🗺️ Municipality Map"
+            >
+                🗺️ แผนที่เทศบาลตำบลวัดธาตุ
+            </h3>
 
 
-                <iframe
-                    class="municipality-map"
-                    src="https://www.google.com/maps?q=เทศบาลตำบลวัดธาตุ%20หนองคาย&output=embed"
-                    loading="lazy"
-                    allowfullscreen
-                    referrerpolicy="no-referrer-when-downgrade"
-                    title="แผนที่เทศบาลตำบลวัดธาตุ"
-                >
-                </iframe>
+            <iframe
+                class="municipality-map"
+                src="https://www.google.com/maps?q=เทศบาลตำบลวัดธาตุ%20หนองคาย&output=embed"
+                loading="lazy"
+                allowfullscreen
+                title="แผนที่เทศบาลตำบลวัดธาตุ"
+            >
+            </iframe>
 
 
-                <a
-                    href="https://www.google.com/maps/search/?api=1&query=เทศบาลตำบลวัดธาตุ+หนองคาย"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="map-button"
-                    data-th="📍 เปิด Google Maps เพื่อนำทาง"
-                    data-en="📍 Open Google Maps for Directions"
-                >
-                    📍 เปิด Google Maps เพื่อนำทาง
-                </a>
-
-            </div>
+            <a
+                class="primary-button"
+                href="https://www.google.com/maps/search/?api=1&query=เทศบาลตำบลวัดธาตุ+หนองคาย"
+                target="_blank"
+                rel="noopener"
+                data-th="📍 เปิด Google Maps เพื่อนำทาง"
+                data-en="📍 Open Google Maps"
+            >
+                📍 เปิด Google Maps เพื่อนำทาง
+            </a>
 
         </section>
 
@@ -956,360 +734,34 @@
     </main>
 
 
+    <footer>
 
-    <!-- =========================================
-         Leaflet
-    ========================================== -->
+        <img
+            src="images/logo.png"
+            alt="ตราเทศบาล"
+        >
+
+        <div>
+            <strong
+                data-th="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ"
+                data-en="Wat That Water & Weather Information Center"
+            >
+                ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ
+            </strong>
+
+            <p>
+                เทศบาลตำบลวัดธาตุ
+            </p>
+        </div>
+
+    </footer>
+
 
     <script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    >
-    </script>
-
-
-
-    <!-- =========================================
-         JavaScript เดิม
-    ========================================== -->
+    ></script>
 
     <script src="script.js"></script>
-
-
-
-    <!-- =========================================
-         JavaScript เพิ่มเติม
-    ========================================== -->
-
-    <script>
-
-
-        /* ========================================
-           ภาษา
-        ======================================== */
-
-        let currentLanguage = "th";
-
-
-        function changeLanguage(language) {
-
-            currentLanguage = language;
-
-
-            document
-                .querySelectorAll(
-                    "[data-th][data-en]"
-                )
-                .forEach(element => {
-
-                    element.textContent =
-                        language === "th"
-                            ? element.dataset.th
-                            : element.dataset.en;
-
-                });
-
-
-            document
-                .querySelectorAll(
-                    ".lang-btn"
-                )
-                .forEach(button => {
-
-                    button.classList.remove(
-                        "active"
-                    );
-
-
-                    if (
-                        button.dataset.lang ===
-                        language
-                    ) {
-
-                        button.classList.add(
-                            "active"
-                        );
-
-                    }
-
-                });
-
-
-            document.documentElement.lang =
-                language;
-
-
-            if (language === "th") {
-
-                document.title =
-                    "ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ";
-
-            } else {
-
-                document.title =
-                    "Wat That Subdistrict Water & Weather Information Center";
-
-            }
-
-
-            localStorage.setItem(
-                "watthat-language",
-                language
-            );
-
-
-            updateRadarTime();
-
-        }
-
-
-
-        const savedLanguage =
-            localStorage.getItem(
-                "watthat-language"
-            );
-
-
-        if (
-            savedLanguage === "en"
-        ) {
-
-            changeLanguage("en");
-
-        } else {
-
-            changeLanguage("th");
-
-        }
-
-
-
-        /* ========================================
-           RADAR
-        ======================================== */
-
-        const radarMap =
-            L.map(
-                "weather-radar",
-                {
-                    zoomControl: true
-                }
-            )
-            .setView(
-                [17.88, 102.74],
-                7
-            );
-
-
-
-        /* แผนที่พื้นฐาน */
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom: 19,
-
-                attribution:
-                    "&copy; OpenStreetMap contributors"
-            }
-        )
-        .addTo(
-            radarMap
-        );
-
-
-
-        /* จุดตำบลวัดธาตุ */
-
-        L.marker(
-            [17.88, 102.74]
-        )
-        .addTo(
-            radarMap
-        )
-        .bindPopup(
-            "เทศบาลตำบลวัดธาตุ<br>Wat That Subdistrict"
-        );
-
-
-
-        let radarLayer = null;
-
-        let latestRadarDate = null;
-
-
-
-        function updateRadarTime() {
-
-            if (!latestRadarDate) {
-                return;
-            }
-
-
-            document.getElementById(
-                "radar-time"
-            ).textContent =
-
-                latestRadarDate
-                    .toLocaleString(
-
-                        currentLanguage === "en"
-                            ? "en-GB"
-                            : "th-TH",
-
-                        {
-                            hour:
-                                "2-digit",
-
-                            minute:
-                                "2-digit",
-
-                            day:
-                                "numeric",
-
-                            month:
-                                "short",
-
-                            year:
-                                "numeric"
-                        }
-
-                    );
-
-        }
-
-
-
-        async function loadWeatherRadar() {
-
-            try {
-
-                const response =
-                    await fetch(
-                        "https://api.rainviewer.com/public/weather-maps.json"
-                    );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Cannot load radar"
-                    );
-
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                const frames =
-                    data.radar.past;
-
-
-                if (
-                    !frames ||
-                    frames.length === 0
-                ) {
-
-                    throw new Error(
-                        "No radar frames"
-                    );
-
-                }
-
-
-
-                const latest =
-                    frames[
-                        frames.length - 1
-                    ];
-
-
-
-                if (radarLayer) {
-
-                    radarMap.removeLayer(
-                        radarLayer
-                    );
-
-                }
-
-
-
-                radarLayer =
-                    L.tileLayer(
-
-                        `${data.host}${latest.path}/256/{z}/{x}/{y}/2/1_0.png`,
-
-                        {
-
-                            opacity:
-                                0.65,
-
-                            maxZoom:
-                                7,
-
-                            attribution:
-                                "Radar data © RainViewer"
-
-                        }
-
-                    );
-
-
-                radarLayer.addTo(
-                    radarMap
-                );
-
-
-
-                latestRadarDate =
-                    new Date(
-                        latest.time *
-                        1000
-                    );
-
-
-                updateRadarTime();
-
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Radar error:",
-                    error
-                );
-
-
-                document.getElementById(
-                    "radar-time"
-                ).textContent =
-
-                    currentLanguage === "en"
-
-                        ? "Unable to load radar"
-
-                        : "ไม่สามารถโหลดเรดาร์ได้";
-
-            }
-
-        }
-
-
-
-        loadWeatherRadar();
-
-
-        setInterval(
-            loadWeatherRadar,
-            10 * 60 * 1000
-        );
-
-
-    </script>
-
 
 </body>
 

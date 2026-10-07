@@ -1,145 +1,378 @@
-const latitude = 17.88;
-const longitude = 102.74;
-
-const url =
-    `https://api.open-meteo.com/v1/forecast` +
-    `?latitude=${latitude}` +
-    `&longitude=${longitude}` +
-    `&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m` +
-    `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-    `&timezone=Asia%2FBangkok`;
-
-fetch(url)
-
-    .then(response => response.json())
-
-    .then(data => {
-
-        console.log(data);
-
-        updateRainStatus(data);
-
-        // =========================
-        // อากาศปัจจุบัน
-        // =========================
-
-        document.getElementById("temperature").textContent =
-            data.current.temperature_2m;
-
-        document.getElementById("rain").textContent =
-            data.current.precipitation;
-
-        document.getElementById("humidity").textContent =
-            data.current.relative_humidity_2m;
-
-        document.getElementById("wind").textContent =
-            data.current.wind_speed_10m;
+const WAT_THAT = {
+    lat: 17.853694,
+    lon: 102.801722
+};
 
 
-        // เวลาอัปเดต
-
-        const updateTime = new Date(data.current.time);
-
-        document.getElementById("update-time").textContent =
-            updateTime.toLocaleTimeString("th-TH", {
-                hour: "2-digit",
-                minute: "2-digit"
-            }) + " น.";
+let currentLanguage =
+    localStorage.getItem("watthat-language") || "th";
 
 
-        // =========================
-        // พยากรณ์ 7 วัน
-        // =========================
-
-        const forecastContainer =
-            document.getElementById("forecast");
-
-        forecastContainer.innerHTML = "";
+let weatherData = null;
+let reservoirData = null;
+let waterLocationData = [];
 
 
-        for (let i = 0; i < data.daily.time.length; i++) {
+/* =========================================
+   LANGUAGE
+========================================= */
 
-            const date =
-                new Date(data.daily.time[i] + "T00:00:00");
+const text = {
 
-            const dayName =
-                date.toLocaleDateString("th-TH", {
-                    weekday: "short"
-                });
+    th: {
+        checking: "กำลังตรวจสอบข้อมูล...",
+        normal: "🟢 สภาพอากาศปกติ",
+        watch: "🟡 เฝ้าระวังฝน",
+        warning: "🟠 มีฝนค่อนข้างมาก",
+        danger: "🔴 ฝนตกหนัก",
 
+        rainChance: "โอกาสฝนวันนี้",
+        currentRain: "ฝนปัจจุบัน",
 
-            const maxTemp =
-                data.daily.temperature_2m_max[i];
+        radarPause: "⏸ หยุด",
+        radarPlay: "▶ เล่น",
 
-            const minTemp =
-                data.daily.temperature_2m_min[i];
+        reservoirVeryHigh: "🔴 ปริมาณน้ำเต็มหรือเกินความจุ",
+        reservoirHigh: "🟠 ปริมาณน้ำสูง",
+        reservoirGood: "🟢 ปริมาณน้ำอยู่ในระดับสูง",
+        reservoirMedium: "🟢 ปริมาณน้ำปานกลาง",
+        reservoirLow: "🟡 ปริมาณน้ำน้อย",
 
-            const rainChance =
-                data.daily.precipitation_probability_max[i];
+        temperature: "อุณหภูมิ",
+        rain: "ฝน",
+        chance: "โอกาสฝน",
+        humidity: "ความชื้น",
 
-            const weatherCode =
-                data.daily.weather_code[i];
+        million: "ล้าน ลบ.ม.",
 
-
-            const icon =
-                getWeatherIcon(weatherCode);
-
-
-            const card =
-                document.createElement("div");
-
-            card.className = "forecast-card";
-
-
-            card.innerHTML = `
-
-                <h3>${dayName}</h3>
-
-                <div class="forecast-icon">
-                    ${icon}
-                </div>
-
-                <div class="temp-max">
-                    ${maxTemp}°C
-                </div>
-
-                <div class="temp-min">
-                    ${minTemp}°C
-                </div>
-
-                <div class="rain-chance">
-                    🌧️ ${rainChance}%
-                </div>
-
-            `;
+        unavailable: "ไม่สามารถโหลดข้อมูลได้"
+    },
 
 
-            forecastContainer.appendChild(card);
-        }
+    en: {
+        checking: "Checking data...",
+        normal: "🟢 Normal weather conditions",
+        watch: "🟡 Rain watch",
+        warning: "🟠 Significant rainfall",
+        danger: "🔴 Heavy rainfall",
 
-    })
+        rainChance: "Today's rain chance",
+        currentRain: "Current rainfall",
 
-    .catch(error => {
+        radarPause: "⏸ Pause",
+        radarPlay: "▶ Play",
 
-        console.error(
-            "ไม่สามารถโหลดข้อมูลอากาศได้",
-            error
+        reservoirVeryHigh: "🔴 Full or above capacity",
+        reservoirHigh: "🟠 High water storage",
+        reservoirGood: "🟢 High water storage",
+        reservoirMedium: "🟢 Moderate water storage",
+        reservoirLow: "🟡 Low water storage",
+
+        temperature: "Temperature",
+        rain: "Rain",
+        chance: "Rain chance",
+        humidity: "Humidity",
+
+        million: "million m³",
+
+        unavailable: "Unable to load data"
+    }
+
+};
+
+
+function t(key) {
+    return text[currentLanguage][key];
+}
+
+
+function changeLanguage(language) {
+
+    currentLanguage = language;
+
+    localStorage.setItem(
+        "watthat-language",
+        language
+    );
+
+
+    document.documentElement.lang =
+        language;
+
+
+    document
+        .querySelectorAll("[data-th][data-en]")
+        .forEach(element => {
+
+            element.textContent =
+                language === "th"
+                    ? element.dataset.th
+                    : element.dataset.en;
+
+        });
+
+
+    document
+        .querySelectorAll(".lang-btn")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.lang === language
+            );
+
+        });
+
+
+    document.title =
+        language === "th"
+            ? "ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ"
+            : "Wat That Water & Weather Information Center";
+
+
+    renderWeather();
+    renderForecast();
+    renderWaterLocations();
+    renderReservoir();
+
+    updateRadarButton();
+    updateRadarTime();
+
+}
+
+
+document
+    .querySelectorAll(".lang-btn")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+                changeLanguage(
+                    button.dataset.lang
+                );
+            }
         );
 
     });
 
 
-// =========================
-// เลือกไอคอนตามสภาพอากาศ
-// =========================
 
-function getWeatherIcon(code) {
+/* =========================================
+   WEATHER
+========================================= */
+
+async function loadWeather() {
+
+    try {
+
+        const url =
+            `https://api.open-meteo.com/v1/forecast` +
+            `?latitude=${WAT_THAT.lat}` +
+            `&longitude=${WAT_THAT.lon}` +
+            `&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m` +
+            `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
+            `&timezone=Asia%2FBangkok`;
+
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+            throw new Error("Weather API error");
+        }
+
+
+        weatherData =
+            await response.json();
+
+
+        renderWeather();
+        renderForecast();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById("status").textContent =
+            t("unavailable");
+
+    }
+
+}
+
+
+function renderWeather() {
+
+    if (!weatherData) {
+        return;
+    }
+
+
+    const current =
+        weatherData.current;
+
+
+    document.getElementById(
+        "temperature"
+    ).textContent =
+        current.temperature_2m;
+
+
+    document.getElementById(
+        "rain"
+    ).textContent =
+        current.precipitation;
+
+
+    document.getElementById(
+        "humidity"
+    ).textContent =
+        current.relative_humidity_2m;
+
+
+    document.getElementById(
+        "wind"
+    ).textContent =
+        current.wind_speed_10m;
+
+
+    const updateDate =
+        new Date(current.time);
+
+
+    document.getElementById(
+        "update-time"
+    ).textContent =
+        updateDate.toLocaleTimeString(
+            currentLanguage === "th"
+                ? "th-TH"
+                : "en-GB",
+            {
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
+
+
+    renderRainStatus();
+
+}
+
+
+function renderRainStatus() {
+
+    if (!weatherData) {
+        return;
+    }
+
+
+    const rain =
+        weatherData.current.precipitation;
+
+
+    const rainChance =
+        weatherData.daily
+            .precipitation_probability_max[0];
+
+
+    const status =
+        document.getElementById("status");
+
+
+    const detail =
+        document.getElementById("status-detail");
+
+
+    const card =
+        document.getElementById("status-card");
+
+
+    card.classList.remove(
+        "status-normal",
+        "status-watch",
+        "status-warning",
+        "status-danger"
+    );
+
+
+    if (rain >= 15) {
+
+        status.textContent =
+            t("danger");
+
+        detail.textContent =
+            `${t("currentRain")} ${rain} mm`;
+
+        card.classList.add(
+            "status-danger"
+        );
+
+    }
+
+    else if (rain >= 5) {
+
+        status.textContent =
+            t("warning");
+
+        detail.textContent =
+            `${t("currentRain")} ${rain} mm`;
+
+        card.classList.add(
+            "status-warning"
+        );
+
+    }
+
+    else if (
+        rain > 0 ||
+        rainChance >= 60
+    ) {
+
+        status.textContent =
+            t("watch");
+
+        detail.textContent =
+            `${t("rainChance")} ${rainChance}%`;
+
+        card.classList.add(
+            "status-watch"
+        );
+
+    }
+
+    else {
+
+        status.textContent =
+            t("normal");
+
+        detail.textContent =
+            `${t("rainChance")} ${rainChance}%`;
+
+        card.classList.add(
+            "status-normal"
+        );
+
+    }
+
+}
+
+
+
+/* =========================================
+   FORECAST
+========================================= */
+
+function weatherIcon(code) {
 
     if (code === 0) {
         return "☀️";
     }
 
-    if (code === 1 || code === 2) {
+    if (code <= 2) {
         return "🌤️";
     }
 
@@ -164,221 +397,263 @@ function getWeatherIcon(code) {
     }
 
     return "🌤️";
-}
-function updateRainStatus(data) {
-
-    const rain = data.current.precipitation;
-
-    const rainChance =
-        data.daily.precipitation_probability_max[0];
-
-    const status =
-        document.getElementById("status");
-
-    const detail =
-        document.getElementById("status-detail");
-
-    const card =
-        document.getElementById("status-card");
-
-
-    card.classList.remove(
-        "status-normal",
-        "status-watch",
-        "status-warning",
-        "status-danger"
-    );
-
-
-    if (rain >= 15) {
-
-        status.textContent =
-            "🔴 ฝนตกหนัก";
-
-        detail.textContent =
-            `ฝนปัจจุบัน ${rain} มม. ควรติดตามสถานการณ์อย่างใกล้ชิด`;
-
-        card.classList.add("status-danger");
-
-    }
-
-    else if (rain >= 5) {
-
-        status.textContent =
-            "🟠 มีฝนค่อนข้างมาก";
-
-        detail.textContent =
-            `ฝนปัจจุบัน ${rain} มม.`;
-
-        card.classList.add("status-warning");
-
-    }
-
-    else if (rain > 0 || rainChance >= 60) {
-
-        status.textContent =
-            "🟡 เฝ้าระวังฝน";
-
-        detail.textContent =
-            `โอกาสฝนวันนี้ ${rainChance}%`;
-
-        card.classList.add("status-watch");
-
-    }
-
-    else {
-
-        status.textContent =
-            "🟢 สภาพอากาศปกติ";
-
-        detail.textContent =
-            `โอกาสฝนวันนี้ ${rainChance}%`;
-
-        card.classList.add("status-normal");
-
-    }
 
 }
 
-// ================================
-// แหล่งน้ำตำบลวัดธาตุ
-// ================================
+
+function renderForecast() {
+
+    if (!weatherData) {
+        return;
+    }
+
+
+    const container =
+        document.getElementById("forecast");
+
+
+    container.innerHTML = "";
+
+
+    weatherData.daily.time
+        .forEach((dateString, index) => {
+
+            const date =
+                new Date(
+                    dateString + "T00:00:00"
+                );
+
+
+            const dayName =
+                date.toLocaleDateString(
+                    currentLanguage === "th"
+                        ? "th-TH"
+                        : "en-GB",
+                    {
+                        weekday: "short"
+                    }
+                );
+
+
+            const card =
+                document.createElement("div");
+
+
+            card.className =
+                "forecast-card";
+
+
+            card.innerHTML = `
+
+                <strong>${dayName}</strong>
+
+                <div class="forecast-icon">
+                    ${weatherIcon(
+                        weatherData.daily.weather_code[index]
+                    )}
+                </div>
+
+                <div class="forecast-max">
+                    ${weatherData.daily.temperature_2m_max[index]}°C
+                </div>
+
+                <div class="forecast-min">
+                    ${weatherData.daily.temperature_2m_min[index]}°C
+                </div>
+
+                <div class="forecast-rain">
+                    🌧️
+                    ${weatherData.daily.precipitation_probability_max[index]}%
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+
+        });
+
+}
+
+
+
+/* =========================================
+   LOCAL WATER SOURCES
+========================================= */
 
 const waterLocations = [
 
     {
-        name: "บึงหนองคาย",
-        area: "บ้านสร้างประทาย หมู่ 10",
+        th: "บึงหนองคาย",
+        en: "Bueng Nong Khai",
+        areaTh: "บ้านสร้างประทาย หมู่ 10",
+        areaEn: "Ban Sang Prathai, Moo 10",
         icon: "🌊",
-        latitude: 17.853694,
-        longitude: 102.801722,
-        locationType: "จุดอ้างอิงบริเวณบึง"
+        lat: 17.853694,
+        lon: 102.801722
     },
 
     {
-        name: "ลำห้วยยาง",
-        area: "ช่วงบ้านเมืองบาง หมู่ 1",
+        th: "ลำห้วยยาง",
+        en: "Huai Yang Stream",
+        areaTh: "พื้นที่บ้านเมืองบาง",
+        areaEn: "Ban Mueang Bang area",
         icon: "💧",
-        latitude: 17.851441,
-        longitude: 102.829628,
-        locationType: "จุดอ้างอิงพื้นที่"
+        lat: 17.851441,
+        lon: 102.829628
     },
 
     {
-        name: "อ่างเก็บน้ำบ้านเบิดใหญ่",
-        area: "บ้านเบิดใหญ่ หมู่ 6",
+        th: "อ่างเก็บน้ำบ้านเบิดใหญ่",
+        en: "Ban Boet Yai Reservoir",
+        areaTh: "บ้านเบิดใหญ่ หมู่ 6",
+        areaEn: "Ban Boet Yai, Moo 6",
         icon: "🏞️",
-        latitude: 17.862368,
-        longitude: 102.825702,
-        locationType: "พิกัดอ้างอิงจากกรมชลประทาน"
+        lat: 17.862368,
+        lon: 102.825702
     },
 
     {
-        name: "ห้วยจุ่มก้น",
-        area: "บ้านทิพย์ธานี หมู่ 14",
+        th: "ห้วยจุ่มก้น",
+        en: "Huai Chum Kon",
+        areaTh: "บ้านทิพย์ธานี หมู่ 14",
+        areaEn: "Ban Thip Thani, Moo 14",
         icon: "💦",
-        latitude: 17.867458,
-        longitude: 102.781926,
-        locationType: "จุดอ้างอิงพื้นที่หมู่บ้าน"
+        lat: 17.867458,
+        lon: 102.781926
     },
 
     {
-        name: "คลองหลุบบึ่ง",
-        area: "บ้านเบิดน้อย หมู่ 7",
+        th: "คลองหลุบบึ่ง",
+        en: "Khlong Lup Bueng",
+        areaTh: "บ้านเบิดน้อย หมู่ 7",
+        areaEn: "Ban Boet Noi, Moo 7",
         icon: "💦",
-        latitude: 17.871892,
-        longitude: 102.807057,
-        locationType: "จุดอ้างอิงพื้นที่หมู่บ้าน"
+        lat: 17.871892,
+        lon: 102.807057
     }
 
 ];
 
 
-// ================================
-// โหลดอากาศแยกแต่ละแหล่งน้ำ
-// ================================
-
-async function loadWaterWeather() {
-
-    const container =
-        document.getElementById("water-locations");
-
-    container.innerHTML =
-        "<p>กำลังโหลดข้อมูล...</p>";
-
+async function loadWaterLocations() {
 
     try {
 
         const results =
             await Promise.all(
 
-                waterLocations.map(async place => {
+                waterLocations.map(
+                    async place => {
 
-                    const url =
-                        `https://api.open-meteo.com/v1/forecast` +
-                        `?latitude=${place.latitude}` +
-                        `&longitude=${place.longitude}` +
-                        `&current=temperature_2m,relative_humidity_2m,precipitation` +
-                        `&daily=precipitation_probability_max` +
-                        `&timezone=Asia%2FBangkok`;
-
-
-                    const response =
-                        await fetch(url);
+                        const url =
+                            `https://api.open-meteo.com/v1/forecast` +
+                            `?latitude=${place.lat}` +
+                            `&longitude=${place.lon}` +
+                            `&current=temperature_2m,relative_humidity_2m,precipitation` +
+                            `&daily=precipitation_probability_max` +
+                            `&timezone=Asia%2FBangkok`;
 
 
-                    if (!response.ok) {
+                        const response =
+                            await fetch(url);
 
-                        throw new Error(
-                            `โหลดข้อมูล ${place.name} ไม่สำเร็จ`
-                        );
+
+                        const data =
+                            await response.json();
+
+
+                        return {
+
+                            ...place,
+
+                            temperature:
+                                data.current.temperature_2m,
+
+                            humidity:
+                                data.current.relative_humidity_2m,
+
+                            rain:
+                                data.current.precipitation,
+
+                            rainChance:
+                                data.daily
+                                    .precipitation_probability_max[0]
+
+                        };
 
                     }
-
-
-                    const data =
-                        await response.json();
-
-
-                    return {
-
-                        ...place,
-
-                        temperature:
-                            data.current.temperature_2m,
-
-                        humidity:
-                            data.current.relative_humidity_2m,
-
-                        rain:
-                            data.current.precipitation,
-
-                        rainChance:
-                            data.daily
-                                .precipitation_probability_max[0],
-
-                        updateTime:
-                            data.current.time
-
-                    };
-
-                })
+                )
 
             );
 
 
-        // ล้างข้อความโหลด
-        container.innerHTML = "";
+        waterLocationData =
+            results;
 
 
-        results.forEach(place => {
+        renderWaterLocations();
 
-            const status =
-                getWaterRainStatus(
-                    place.rain,
-                    place.rainChance
-                );
+    }
 
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "water-locations"
+        ).textContent =
+            t("unavailable");
+
+    }
+
+}
+
+
+function localStatus(place) {
+
+    if (place.rain >= 15) {
+        return t("danger");
+    }
+
+    if (place.rain >= 5) {
+        return t("warning");
+    }
+
+    if (
+        place.rain > 0 ||
+        place.rainChance >= 60
+    ) {
+        return t("watch");
+    }
+
+    return t("normal");
+
+}
+
+
+function renderWaterLocations() {
+
+    if (
+        waterLocationData.length === 0
+    ) {
+        return;
+    }
+
+
+    const container =
+        document.getElementById(
+            "water-locations"
+        );
+
+
+    container.innerHTML = "";
+
+
+    waterLocationData.forEach(
+        place => {
 
             const card =
                 document.createElement("div");
@@ -388,50 +663,59 @@ async function loadWaterWeather() {
                 "water-location-card";
 
 
+            const name =
+                currentLanguage === "th"
+                    ? place.th
+                    : place.en;
+
+
+            const area =
+                currentLanguage === "th"
+                    ? place.areaTh
+                    : place.areaEn;
+
+
             card.innerHTML = `
 
-                <div class="water-card-top">
+                <div class="water-title">
 
-                    <div class="water-place-icon">
+                    <div class="water-icon">
                         ${place.icon}
                     </div>
 
                     <div>
-                        <h3>${place.name}</h3>
-                        <p>${place.area}</p>
+                        <h3>${name}</h3>
+                        <p>${area}</p>
                     </div>
 
                 </div>
 
 
-                <div class="water-weather">
+                <div class="water-values">
 
                     <div>
-                        <span>🌡️ อุณหภูมิ</span>
+                        <small>${t("temperature")}</small>
                         <strong>
                             ${place.temperature}°C
                         </strong>
                     </div>
 
-
                     <div>
-                        <span>🌧️ ฝนปัจจุบัน</span>
+                        <small>${t("rain")}</small>
                         <strong>
-                            ${place.rain} มม.
+                            ${place.rain} mm
                         </strong>
                     </div>
 
-
                     <div>
-                        <span>☔ โอกาสฝน</span>
+                        <small>${t("chance")}</small>
                         <strong>
                             ${place.rainChance}%
                         </strong>
                     </div>
 
-
                     <div>
-                        <span>💧 ความชื้น</span>
+                        <small>${t("humidity")}</small>
                         <strong>
                             ${place.humidity}%
                         </strong>
@@ -440,162 +724,51 @@ async function loadWaterWeather() {
                 </div>
 
 
-                <div class="water-status ${status.className}">
-                    ${status.text}
-                </div>
-
-
-                <div class="water-location-note">
-                    📍 ${place.locationType}
+                <div class="water-local-status">
+                    ${localStatus(place)}
                 </div>
 
             `;
 
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
         });
 
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        container.innerHTML =
-            `<p>
-                ไม่สามารถโหลดข้อมูลแหล่งน้ำได้ในขณะนี้
-            </p>`;
-
-    }
-
 }
 
 
-// ================================
-// ประเมินสถานการณ์ฝน
-// ================================
 
-function getWaterRainStatus(
-    rain,
-    rainChance
-) {
+/* =========================================
+   RESERVOIR
+========================================= */
 
-    if (rain >= 15) {
-
-        return {
-            text: "🔴 มีฝนตกหนัก",
-            className: "water-danger"
-        };
-
-    }
-
-
-    if (rain >= 5) {
-
-        return {
-            text: "🟠 มีฝนค่อนข้างมาก",
-            className: "water-warning"
-        };
-
-    }
-
-
-    if (
-        rain > 0 ||
-        rainChance >= 60
-    ) {
-
-        return {
-            text: "🟡 เฝ้าระวังฝน",
-            className: "water-watch"
-        };
-
-    }
-
-
-    return {
-        text: "🟢 สภาพอากาศปกติ",
-        className: "water-normal"
-    };
-
-}
-
-
-// โหลดครั้งแรก
-loadWaterWeather();
-
-
-// อัปเดตทุก 10 นาที
-setInterval(
-    loadWaterWeather,
-    10 * 60 * 1000
-);
-async function loadReservoirData() {
+async function loadReservoir() {
 
     try {
 
         const response =
             await fetch("/api/berd-yai-reservoir");
 
+
         const result =
             await response.json();
 
+
         if (!result.success) {
-            throw new Error(result.message);
+            throw new Error(
+                result.message
+            );
         }
 
-        const data = result.data;
+
+        reservoirData =
+            result.data;
 
 
-        // เปอร์เซ็นต์น้ำ
-        document.getElementById(
-            "reservoir-percent"
-        ).textContent =
-            data.percent.toFixed(2);
-
-
-        // ความจุอ่าง
-        document.getElementById(
-            "reservoir-capacity"
-        ).textContent =
-            `${data.capacity.toFixed(3)} ล้าน ลบ.ม.`;
-
-
-        // ปริมาณน้ำปัจจุบัน
-        document.getElementById(
-            "reservoir-volume"
-        ).textContent =
-            `${data.volume.toFixed(3)} ล้าน ลบ.ม.`;
-
-
-        // แถบระดับน้ำ
-        document.getElementById(
-            "water-bar-fill"
-        ).style.width =
-            `${Math.min(data.percent, 100)}%`;
-
-
-        // เวลาโหลดข้อมูล
-        const updateTime =
-            new Date(data.fetchedAt);
-
-        document.getElementById(
-            "reservoir-update"
-        ).textContent =
-            updateTime.toLocaleString(
-                "th-TH",
-                {
-                    dateStyle: "medium",
-                    timeStyle: "short"
-                }
-            );
-
-
-        updateReservoirStatus(
-            data.percent
-        );
+        renderReservoir();
 
     }
 
@@ -606,110 +779,165 @@ async function loadReservoirData() {
         document.getElementById(
             "reservoir-status"
         ).textContent =
-            "⚪ ไม่สามารถโหลดข้อมูลได้";
+            t("unavailable");
 
     }
 
 }
 
 
+function reservoirStatus(percent) {
 
-function updateReservoirStatus(percent) {
+    if (percent >= 100) {
+        return t("reservoirVeryHigh");
+    }
 
-    const status =
-        document.getElementById(
-            "reservoir-status"
+    if (percent >= 90) {
+        return t("reservoirHigh");
+    }
+
+    if (percent >= 70) {
+        return t("reservoirGood");
+    }
+
+    if (percent >= 30) {
+        return t("reservoirMedium");
+    }
+
+    return t("reservoirLow");
+
+}
+
+
+function renderReservoir() {
+
+    if (!reservoirData) {
+        return;
+    }
+
+
+    document.getElementById(
+        "reservoir-percent"
+    ).textContent =
+        reservoirData.percent.toFixed(2);
+
+
+    document.getElementById(
+        "reservoir-capacity"
+    ).textContent =
+        `${reservoirData.capacity.toFixed(3)} ${t("million")}`;
+
+
+    document.getElementById(
+        "reservoir-volume"
+    ).textContent =
+        `${reservoirData.volume.toFixed(3)} ${t("million")}`;
+
+
+    document.getElementById(
+        "water-bar-fill"
+    ).style.width =
+        `${Math.min(
+            reservoirData.percent,
+            100
+        )}%`;
+
+
+    document.getElementById(
+        "reservoir-status"
+    ).textContent =
+        reservoirStatus(
+            reservoirData.percent
         );
 
 
-    if (percent >= 90) {
+    const fetched =
+        new Date(
+            reservoirData.fetchedAt
+        );
 
-        status.textContent =
-            "🟠 ปริมาณน้ำสูง";
 
-    }
-
-    else if (percent >= 70) {
-
-        status.textContent =
-            "🟢 ปริมาณน้ำอยู่ในระดับสูง";
-
-    }
-
-    else if (percent >= 30) {
-
-        status.textContent =
-            "🟢 ปริมาณน้ำปานกลาง";
-
-    }
-
-    else {
-
-        status.textContent =
-            "🟡 ปริมาณน้ำน้อย";
-
-    }
+    document.getElementById(
+        "reservoir-update"
+    ).textContent =
+        fetched.toLocaleString(
+            currentLanguage === "th"
+                ? "th-TH"
+                : "en-GB",
+            {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }
+        );
 
 }
 
 
-// โหลดข้อมูลตอนเปิดเว็บ
-loadReservoirData();
 
+/* =========================================
+   RADAR
+========================================= */
 
-// โหลดใหม่ทุก 30 นาที
-setInterval(
-    loadReservoirData,
-    30 * 60 * 1000
-);
-// =====================================
-// WEATHER RADAR
-// RainViewer + Leaflet
-// =====================================
-
-const radarMap =
-    L.map("weather-radar", {
-        zoomControl: true
-    })
-    .setView(
-        [17.88, 102.74],
-        7
-    );
-
-
-// แผนที่พื้นฐาน
-
-L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-        maxZoom: 19,
-        attribution:
-            '&copy; OpenStreetMap contributors'
-    }
-).addTo(radarMap);
-
-
-// จุดตำบลวัดธาตุ
-
-L.marker(
-    [17.88, 102.74]
-)
-.addTo(radarMap)
-.bindPopup(
-    "เทศบาลตำบลวัดธาตุ<br>Wat That Subdistrict"
-);
-
-
-// Layer radar ปัจจุบัน
+let radarMap;
+let radarFrames = [];
 
 let radarLayer = null;
 
+let radarFrameIndex = 0;
 
-// =====================================
-// โหลดข้อมูล Radar
-// =====================================
+let radarTimer = null;
 
-async function loadWeatherRadar() {
+let radarPlaying = true;
+
+let currentRadarDate = null;
+
+
+function initRadarMap() {
+
+    radarMap =
+        L.map(
+            "weather-radar"
+        )
+        .setView(
+            [
+                WAT_THAT.lat,
+                WAT_THAT.lon
+            ],
+            8
+        );
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+
+            attribution:
+                "&copy; OpenStreetMap"
+        }
+    )
+    .addTo(
+        radarMap
+    );
+
+
+    L.marker(
+        [
+            WAT_THAT.lat,
+            WAT_THAT.lon
+        ]
+    )
+    .addTo(
+        radarMap
+    )
+    .bindPopup(
+        "เทศบาลตำบลวัดธาตุ<br>Wat That Subdistrict"
+    );
+
+}
+
+
+async function loadRadar() {
 
     try {
 
@@ -719,127 +947,308 @@ async function loadWeatherRadar() {
             );
 
 
-        if (!response.ok) {
-
-            throw new Error(
-                "Cannot load radar data"
-            );
-
-        }
-
-
         const data =
             await response.json();
 
 
-        const frames =
-            data.radar.past;
+        radarFrames =
+            (data.radar.past || [])
+            .slice(-6)
+            .map(frame => ({
+                ...frame,
+                host: data.host
+            }));
 
 
         if (
-            !frames ||
-            frames.length === 0
+            radarFrames.length === 0
         ) {
 
             throw new Error(
-                "No radar frames available"
+                "No radar data"
             );
 
         }
 
 
-        // เลือกภาพล่าสุด
-
-        const latest =
-            frames[
-                frames.length - 1
-            ];
+        radarFrameIndex = 0;
 
 
-        // ลบ radar เก่า
-
-        if (radarLayer) {
-
-            radarMap.removeLayer(
-                radarLayer
-            );
-
-        }
-
-
-        // เพิ่ม radar ใหม่
-
-        radarLayer =
-            L.tileLayer(
-                `${data.host}${latest.path}/256/{z}/{x}/{y}/2/1_0.png`,
-                {
-                    opacity: 0.65,
-                    maxZoom: 7,
-                    attribution:
-                        'Radar data © RainViewer'
-                }
-            );
-
-
-        radarLayer.addTo(
-            radarMap
+        showRadarFrame(
+            radarFrameIndex
         );
 
 
-        // เวลา Radar
-
-        const radarDate =
-            new Date(
-                latest.time * 1000
-            );
-
-
-        document.getElementById(
-            "radar-time"
-        ).textContent =
-            radarDate.toLocaleString(
-                currentLanguage === "en"
-                    ? "en-GB"
-                    : "th-TH",
-                {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    day: "numeric",
-                    month: "short"
-                }
-            );
-
+        startRadar();
 
     }
 
     catch (error) {
 
-        console.error(
-            "Radar error:",
-            error
-        );
-
+        console.error(error);
 
         document.getElementById(
             "radar-time"
         ).textContent =
-            currentLanguage === "en"
-                ? "Unable to load radar"
-                : "ไม่สามารถโหลดเรดาร์ได้";
+            t("unavailable");
 
     }
 
 }
 
 
-// โหลดครั้งแรก
+function showRadarFrame(index) {
 
-loadWeatherRadar();
+    if (
+        radarFrames.length === 0
+    ) {
+        return;
+    }
 
 
-// โหลดข้อมูลใหม่ทุก 10 นาที
+    const frame =
+        radarFrames[index];
+
+
+    if (radarLayer) {
+
+        radarMap.removeLayer(
+            radarLayer
+        );
+
+    }
+
+
+    radarLayer =
+        L.tileLayer(
+
+            `${frame.host}${frame.path}/256/{z}/{x}/{y}/2/1_0.png`,
+
+            {
+                opacity: 0.68,
+
+                maxNativeZoom: 7,
+
+                maxZoom: 12,
+
+                attribution:
+                    "Radar © RainViewer"
+            }
+
+        );
+
+
+    radarLayer.addTo(
+        radarMap
+    );
+
+
+    currentRadarDate =
+        new Date(
+            frame.time * 1000
+        );
+
+
+    updateRadarTime();
+
+
+    document.getElementById(
+        "radar-badge"
+    ).textContent =
+
+        index ===
+        radarFrames.length - 1
+
+            ? "🔴 RADAR • LATEST"
+
+            : "▶ RADAR";
+
+}
+
+
+function scheduleRadarFrame() {
+
+    if (!radarPlaying) {
+        return;
+    }
+
+
+    const delay =
+        radarFrameIndex ===
+        radarFrames.length - 1
+
+            ? 2500
+
+            : 1000;
+
+
+    radarTimer =
+        setTimeout(
+            () => {
+
+                radarFrameIndex =
+                    (
+                        radarFrameIndex + 1
+                    ) %
+                    radarFrames.length;
+
+
+                showRadarFrame(
+                    radarFrameIndex
+                );
+
+
+                scheduleRadarFrame();
+
+            },
+            delay
+        );
+
+}
+
+
+function startRadar() {
+
+    clearTimeout(
+        radarTimer
+    );
+
+
+    radarPlaying = true;
+
+    updateRadarButton();
+
+    scheduleRadarFrame();
+
+}
+
+
+function pauseRadar() {
+
+    radarPlaying = false;
+
+    clearTimeout(
+        radarTimer
+    );
+
+    updateRadarButton();
+
+}
+
+
+function updateRadarButton() {
+
+    const button =
+        document.getElementById(
+            "radar-play"
+        );
+
+
+    if (!button) {
+        return;
+    }
+
+
+    button.textContent =
+        radarPlaying
+            ? t("radarPause")
+            : t("radarPlay");
+
+}
+
+
+function updateRadarTime() {
+
+    if (!currentRadarDate) {
+        return;
+    }
+
+
+    document.getElementById(
+        "radar-time"
+    ).textContent =
+        currentRadarDate.toLocaleString(
+            currentLanguage === "th"
+                ? "th-TH"
+                : "en-GB",
+            {
+                day: "numeric",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
+
+}
+
+
+document.getElementById(
+    "radar-play"
+)
+.addEventListener(
+    "click",
+    () => {
+
+        if (radarPlaying) {
+            pauseRadar();
+        }
+        else {
+            startRadar();
+        }
+
+    }
+);
+
+
+
+/* =========================================
+   START APP
+========================================= */
+
+changeLanguage(
+    currentLanguage
+);
+
+
+loadWeather();
+
+loadWaterLocations();
+
+loadReservoir();
+
+
+initRadarMap();
+
+loadRadar();
+
+
+/* Weather refresh 10 min */
 
 setInterval(
-    loadWeatherRadar,
+    loadWeather,
+    10 * 60 * 1000
+);
+
+
+/* Local locations 10 min */
+
+setInterval(
+    loadWaterLocations,
+    10 * 60 * 1000
+);
+
+
+/* Reservoir 30 min */
+
+setInterval(
+    loadReservoir,
+    30 * 60 * 1000
+);
+
+
+/* Radar metadata refresh 10 min */
+
+setInterval(
+    loadRadar,
     10 * 60 * 1000
 );
