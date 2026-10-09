@@ -1,144 +1,149 @@
-const express =
-    require("express");
+const express = require("express");
+const cheerio = require("cheerio");
 
-const cheerio =
-    require("cheerio");
-
-const app =
-    express();
-
+const app = express();
 
 const PORT =
     process.env.PORT || 3000;
 
 
-/* =========================================
+/* =====================================
    STATIC WEBSITE
-========================================= */
+===================================== */
 
 app.use(
     express.static(__dirname)
 );
 
 
-/* =========================================
-   RESERVOIR API
-   อ่างเก็บน้ำบ้านเบิดใหญ่
-========================================= */
+/* =====================================
+   RESERVOIR FUNCTION
+===================================== */
 
-app.get(
-    "/api/reservoir",
-    async (req, res) => {
+async function getReservoirData(req, res) {
 
-        try {
+    try {
 
-            const sourceUrl =
-                "https://rid5.net/water/smallreport.php";
+        const sourceUrl =
+            "https://rid5.net/water/smallreport.php";
 
 
-            const response =
-                await fetch(
-                    sourceUrl,
-                    {
-                        headers: {
+        const response =
+            await fetch(
+                sourceUrl,
+                {
+                    headers: {
+                        "User-Agent":
+                            "WatThatMunicipality-WaterWeather/1.0",
 
-                            "User-Agent":
-                                "WatThat-Water-Weather/1.0",
+                        "Accept":
+                            "text/html,application/xhtml+xml",
 
-                            "Accept-Language":
-                                "th,en;q=0.8"
+                        "Accept-Language":
+                            "th-TH,th;q=0.9,en;q=0.8"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `RID5 HTTP ${response.status}`
+            );
+
+        }
+
+
+        const html =
+            await response.text();
+
+
+        const $ =
+            cheerio.load(html);
+
+
+        let reservoir =
+            null;
+
+
+        $("tr").each(
+            (index, row) => {
+
+                const cells = [];
+
+
+                $(row)
+                    .find("td")
+                    .each(
+                        (i, cell) => {
+
+                            cells.push(
+                                $(cell)
+                                    .text()
+                                    .replace(
+                                        /\s+/g,
+                                        " "
+                                    )
+                                    .trim()
+                            );
 
                         }
-                    }
-                );
+                    );
 
 
-            if (!response.ok) {
+                /*
+                    อ่างเก็บน้ำบ้านเบิดใหญ่
+                    UTM:
+                    269600
+                    1976300
+                */
 
-                throw new Error(
-                    `RID5 HTTP ${response.status}`
-                );
+                if (
+                    cells[3] === "269600" &&
+                    cells[4] === "1976300"
+                ) {
 
-            }
-
-
-            const html =
-                await response.text();
-
-
-            const $ =
-                cheerio.load(html);
-
-
-            let reservoir =
-                null;
+                    const capacity =
+                        Number(cells[8]);
 
 
-            $("tr").each(
-                (index, row) => {
-
-                    const cells =
-                        [];
+                    const volume =
+                        Number(cells[9]);
 
 
-                    $(row)
-                        .find("td")
-                        .each(
-                            (i, cell) => {
-
-                                cells.push(
-
-                                    $(cell)
-                                        .text()
-                                        .replace(
-                                            /\s+/g,
-                                            " "
-                                        )
-                                        .trim()
-
-                                );
-
-                            }
-                        );
+                    const percent =
+                        Number(cells[10]);
 
 
                     if (
-                        cells.includes(
-                            "269600"
-                        ) &&
-                        cells.includes(
-                            "1976300"
-                        )
+                        Number.isFinite(capacity) &&
+                        Number.isFinite(volume) &&
+                        Number.isFinite(percent)
                     ) {
 
                         reservoir = {
 
                             name:
-                                cells[1],
+                                "อ่างเก็บน้ำบ้านเบิดใหญ่",
 
                             subdistrict:
-                                cells[5],
+                                "วัดธาตุ",
 
                             district:
-                                cells[6],
+                                "เมืองหนองคาย",
 
                             province:
-                                cells[7],
+                                "หนองคาย",
 
                             capacity:
-                                Number(
-                                    cells[8]
-                                ),
+                                capacity,
 
                             volume:
-                                Number(
-                                    cells[9]
-                                ),
+                                volume,
 
                             percent:
-                                Number(
-                                    cells[10]
-                                ),
+                                percent,
 
                             fetchedAt:
                                 new Date()
@@ -149,87 +154,100 @@ app.get(
                     }
 
                 }
-            );
-
-
-            if (!reservoir) {
-
-                return res
-                    .status(404)
-                    .json({
-
-                        success:
-                            false,
-
-                        message:
-                            "ไม่พบข้อมูลอ่างเก็บน้ำบ้านเบิดใหญ่"
-
-                    });
 
             }
+        );
 
 
-            res.json({
+        if (!reservoir) {
 
-                success:
-                    true,
-
-                data:
-                    reservoir,
-
-                source:
-                    "Regional Irrigation Office 5"
-
-            });
-
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Reservoir error:",
-                error
-            );
-
-
-            res
-                .status(500)
+            return res
+                .status(404)
                 .json({
-
-                    success:
-                        false,
-
+                    success: false,
                     message:
-                        "ไม่สามารถดึงข้อมูลอ่างเก็บน้ำได้"
-
+                        "ไม่พบข้อมูลอ่างเก็บน้ำบ้านเบิดใหญ่"
                 });
 
         }
 
+
+        res.json({
+            success: true,
+
+            data:
+                reservoir,
+
+            source:
+                "Regional Irrigation Office 5"
+        });
+
     }
+
+    catch (error) {
+
+        console.error(
+            "Reservoir error:",
+            error
+        );
+
+
+        res
+            .status(500)
+            .json({
+                success: false,
+
+                message:
+                    "ไม่สามารถดึงข้อมูลอ่างเก็บน้ำได้"
+            });
+
+    }
+
+}
+
+
+/* =====================================
+   API ROUTES
+===================================== */
+
+app.get(
+    "/api/reservoir",
+    getReservoirData
 );
 
 
-/* =========================================
+/* รองรับ URL เก่าด้วย */
+
+app.get(
+    "/api/berd-yai-reservoir",
+    getReservoirData
+);
+
+
+/* =====================================
    HEALTH CHECK
-========================================= */
+===================================== */
 
 app.get(
     "/api/health",
     (req, res) => {
 
         res.json({
-            status: "ok"
+            status:
+                "ok",
+
+            time:
+                new Date()
+                    .toISOString()
         });
 
     }
 );
 
 
-/* =========================================
+/* =====================================
    START SERVER
-========================================= */
+===================================== */
 
 app.listen(
     PORT,
@@ -238,10 +256,6 @@ app.listen(
 
         console.log(
             `Server running on port ${PORT}`
-        );
-
-        console.log(
-            `Local: http://localhost:${PORT}`
         );
 
     }

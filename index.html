@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
 
@@ -11,148 +10,409 @@
 
     <meta
         name="description"
-        content="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ เทศบาลตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+        content="ศูนย์ข้อมูลน้ำ อากาศ และคุณภาพอากาศตำบลวัดธาตุ เทศบาลตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
     >
 
     <title>ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ</title>
 
+    <!-- Leaflet -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-    <!-- ภาษา -->
 
-    <div class="language-switcher">
+<!-- =====================================================
+     HERO
+===================================================== -->
 
-        <button
-            class="lang-btn active"
-            data-lang="th"
-        >
-            🇹🇭 ไทย
-        </button>
+<header class="hero" id="home">
 
-        <button
-            class="lang-btn"
-            data-lang="en"
-        >
-            🇬🇧 English
-        </button>
-
-    </div>
+    <div class="hero-overlay"></div>
 
 
-    <!-- หน้าปก -->
+    <!-- NAVIGATION -->
 
-    <header class="hero">
+    <nav class="navbar">
 
-        <div class="hero-overlay"></div>
-
-        <div class="hero-content">
+        <div class="brand">
 
             <img
                 src="images/logo.png"
                 alt="ตราเทศบาลตำบลวัดธาตุ"
-                class="municipality-logo"
+                class="nav-logo"
             >
+
+            <div class="brand-text">
+
+                <strong
+                    data-th="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ"
+                    data-en="Wat That Water & Weather Information Center"
+                >
+                    ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ
+                </strong>
+
+                <span
+                    data-th="เทศบาลตำบลวัดธาตุ"
+                    data-en="Wat That Subdistrict Municipality"
+                >
+                    เทศบาลตำบลวัดธาตุ
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-links">
+
+            <a
+                href="#home"
+                data-th="หน้าหลัก"
+                data-en="Home"
+            >
+                หน้าหลัก
+            </a>
+
+            <a
+                href="#weather"
+                data-th="สภาพอากาศ"
+                data-en="Weather"
+            >
+                สภาพอากาศ
+            </a>
+
+            <a
+                href="#air-quality"
+                data-th="PM2.5"
+                data-en="PM2.5"
+            >
+                PM2.5
+            </a>
+
+            <a
+                href="#water"
+                data-th="สถานการณ์น้ำ"
+                data-en="Water"
+            >
+                สถานการณ์น้ำ
+            </a>
+
+            <a
+                href="#radar"
+                data-th="เรดาร์"
+                data-en="Radar"
+            >
+                เรดาร์
+            </a>
+
+            <a
+                href="#mekong"
+                data-th="แม่น้ำโขง"
+                data-en="Mekong"
+            >
+                แม่น้ำโขง
+            </a>
+
+            <a
+                href="#contact"
+                data-th="ติดต่อ"
+                data-en="Contact"
+            >
+                ติดต่อ
+            </a>
+
+        </div>
+
+
+        <div class="language-switcher">
+
+            <button
+                type="button"
+                class="lang-btn active"
+                data-lang="th"
+            >
+                TH
+            </button>
+
+            <button
+                type="button"
+                class="lang-btn"
+                data-lang="en"
+            >
+                EN
+            </button>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- HERO CONTENT -->
+
+    <div class="hero-content">
+
+        <div class="hero-copy">
+
+            <div class="hero-label">
+                ● MUNICIPAL SMART MONITORING
+            </div>
 
             <h1
-                data-th="เทศบาลตำบลวัดธาตุ"
-                data-en="Wat That Subdistrict Municipality"
-            >
-                เทศบาลตำบลวัดธาตุ
-            </h1>
-
-            <h2
                 data-th="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ"
                 data-en="Wat That Water & Weather Information Center"
             >
                 ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ
-            </h2>
+            </h1>
 
             <p
-                data-th="อำเภอเมืองหนองคาย จังหวัดหนองคาย"
-                data-en="Mueang Nong Khai District, Nong Khai Province"
+                class="hero-location"
+                data-th="เทศบาลตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+                data-en="Wat That Subdistrict Municipality, Mueang Nong Khai, Nong Khai"
             >
-                อำเภอเมืองหนองคาย จังหวัดหนองคาย
+                เทศบาลตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย
             </p>
+
+            <div
+                class="hero-quote"
+                data-th="“ข้อมูลวันนี้ เพื่อชุมชนที่ปลอดภัย และอนาคตที่ยั่งยืน”"
+                data-en="“Today's information for a safer community and a sustainable future.”"
+            >
+                “ข้อมูลวันนี้ เพื่อชุมชนที่ปลอดภัย และอนาคตที่ยั่งยืน”
+            </div>
 
         </div>
 
-    </header>
+
+        <!-- CLOCK -->
+
+        <div class="clock-card">
+
+            <div
+                id="clock-date"
+                class="clock-date"
+            >
+                --
+            </div>
+
+            <div
+                id="clock-time"
+                class="clock-time"
+            >
+                --:--
+            </div>
+
+            <div class="live-line">
+
+                <span class="live-dot"></span>
+
+                LIVE
+
+            </div>
+
+            <small
+                data-th="เวลาปัจจุบัน"
+                data-en="Current local time"
+            >
+                เวลาปัจจุบัน
+            </small>
+
+        </div>
+
+    </div>
 
 
-    <main>
+
+    <!-- QUICK MENU -->
+
+    <div class="quick-menu">
+
+        <a href="#weather" class="quick-item">
+            <span>🌤️</span>
+            <strong
+                data-th="สภาพอากาศ"
+                data-en="Weather"
+            >
+                สภาพอากาศ
+            </strong>
+        </a>
 
 
-        <!-- อากาศปัจจุบัน -->
+        <a href="#rain-status" class="quick-item">
+            <span>🌧️</span>
+            <strong
+                data-th="สถานการณ์ฝน"
+                data-en="Rain"
+            >
+                สถานการณ์ฝน
+            </strong>
+        </a>
 
-        <section class="main-card weather-section">
 
-            <div class="section-header">
+        <a href="#air-quality" class="quick-item">
+            <span>🌫️</span>
+            <strong>
+                PM2.5
+            </strong>
+        </a>
 
-                <div>
-                    <p
-                        class="section-kicker"
-                        data-th="สภาพอากาศ"
-                        data-en="Weather"
-                    >
-                        สภาพอากาศ
-                    </p>
 
-                    <h2
-                        data-th="🌤️ สภาพอากาศปัจจุบัน"
-                        data-en="🌤️ Current Weather"
-                    >
-                        🌤️ สภาพอากาศปัจจุบัน
-                    </h2>
+        <a href="#water" class="quick-item">
+            <span>💧</span>
+            <strong
+                data-th="สถานการณ์น้ำ"
+                data-en="Water"
+            >
+                สถานการณ์น้ำ
+            </strong>
+        </a>
+
+
+        <a href="#radar" class="quick-item">
+            <span>📡</span>
+            <strong
+                data-th="เรดาร์ฝน"
+                data-en="Radar"
+            >
+                เรดาร์ฝน
+            </strong>
+        </a>
+
+
+        <a href="#mekong" class="quick-item">
+            <span>🌊</span>
+            <strong
+                data-th="แม่น้ำโขง"
+                data-en="Mekong"
+            >
+                แม่น้ำโขง
+            </strong>
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<main class="dashboard">
+
+
+    <!-- =================================================
+         WEATHER + RAIN
+    ================================================== -->
+
+    <section
+        id="weather"
+        class="dashboard-grid two-column-grid"
+    >
+
+
+        <!-- WEATHER -->
+
+        <article class="glass-card weather-card">
+
+            <div class="card-heading">
+
+                <div class="heading-left">
+
+                    <span class="card-icon">
+                        🌤️
+                    </span>
+
+                    <div>
+
+                        <h2
+                            data-th="สภาพอากาศปัจจุบัน"
+                            data-en="Current Weather"
+                        >
+                            สภาพอากาศปัจจุบัน
+                        </h2>
+
+                        <p
+                            data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+                            data-en="Wat That Subdistrict, Mueang Nong Khai, Nong Khai"
+                        >
+                            ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย
+                        </p>
+
+                    </div>
+
                 </div>
 
-                <span class="update-badge">
+                <span class="data-live">
                     ● LIVE DATA
                 </span>
 
             </div>
 
 
-            <div class="temperature">
-                <span id="temperature">--</span><small>°C</small>
+            <div class="weather-main">
+
+                <div
+                    id="weather-symbol"
+                    class="weather-symbol"
+                >
+                    🌤️
+                </div>
+
+                <div>
+
+                    <div class="temperature">
+
+                        <span id="temperature">
+                            --
+                        </span>
+
+                        <small>°C</small>
+
+                    </div>
+
+                    <strong
+                        id="weather-description"
+                        class="weather-description"
+                    >
+                        กำลังโหลด...
+                    </strong>
+
+                    <p class="feels-like">
+
+                        <span
+                            data-th="รู้สึกเหมือน"
+                            data-en="Feels like"
+                        >
+                            รู้สึกเหมือน
+                        </span>
+
+                        <strong id="feels-like">
+                            --
+                        </strong>°C
+
+                    </p>
+
+                </div>
+
             </div>
 
 
-            <div class="weather-grid">
+            <div class="metric-grid">
 
-                <div class="info-box">
-                    <span>🌧️</span>
+                <div class="metric">
 
-                    <div>
-                        <small
-                            data-th="ฝนปัจจุบัน"
-                            data-en="Current Rain"
-                        >
-                            ฝนปัจจุบัน
-                        </small>
-
-                        <strong>
-                            <span id="rain">--</span> mm
-                        </strong>
-                    </div>
-                </div>
-
-
-                <div class="info-box">
                     <span>💧</span>
 
                     <div>
+
                         <small
                             data-th="ความชื้น"
                             data-en="Humidity"
@@ -163,176 +423,178 @@
                         <strong>
                             <span id="humidity">--</span>%
                         </strong>
+
                     </div>
+
                 </div>
 
 
-                <div class="info-box">
+                <div class="metric">
+
                     <span>💨</span>
 
                     <div>
+
                         <small
                             data-th="ความเร็วลม"
-                            data-en="Wind Speed"
+                            data-en="Wind speed"
                         >
                             ความเร็วลม
                         </small>
 
                         <strong>
-                            <span id="wind">--</span> km/h
+                            <span id="wind">--</span>
+                            km/h
                         </strong>
+
                     </div>
+
                 </div>
 
 
-                <div class="info-box">
-                    <span>🕐</span>
+                <div class="metric">
+
+                    <span>🌡️</span>
 
                     <div>
+
                         <small
-                            data-th="อัปเดตล่าสุด"
-                            data-en="Last Updated"
+                            data-th="ความกดอากาศ"
+                            data-en="Pressure"
                         >
-                            อัปเดตล่าสุด
+                            ความกดอากาศ
                         </small>
 
-                        <strong id="update-time">
-                            --
+                        <strong>
+                            <span id="pressure">--</span>
+                            hPa
                         </strong>
+
                     </div>
+
                 </div>
 
             </div>
 
-        </section>
 
-
-        <!-- สถานการณ์ฝน -->
-
-        <section
-            class="main-card status-card"
-            id="status-card"
-        >
-
-            <p
-                class="section-kicker"
-                data-th="การเฝ้าระวัง"
-                data-en="Monitoring"
-            >
-                การเฝ้าระวัง
-            </p>
-
-            <h2
-                data-th="🌧️ สถานการณ์ฝนตำบลวัดธาตุ"
-                data-en="🌧️ Rain Situation in Wat That"
-            >
-                🌧️ สถานการณ์ฝนตำบลวัดธาตุ
-            </h2>
-
-            <div id="status" class="big-status">
-                กำลังตรวจสอบข้อมูล...
-            </div>
-
-            <p id="status-detail"></p>
-
-        </section>
-
-
-        <!-- พยากรณ์ -->
-
-        <section class="main-card">
-
-            <p
-                class="section-kicker"
-                data-th="พยากรณ์"
-                data-en="Forecast"
-            >
-                พยากรณ์
-            </p>
-
-            <h2
-                data-th="📅 พยากรณ์อากาศ 7 วัน"
-                data-en="📅 7-Day Weather Forecast"
-            >
-                📅 พยากรณ์อากาศ 7 วัน
-            </h2>
-
-            <div
-                id="forecast"
-                class="forecast-grid"
-            >
-                กำลังโหลดข้อมูล...
-            </div>
-
-        </section>
-
-
-        <!-- RADAR -->
-
-        <section class="main-card radar-section">
-
-            <div class="section-header">
-
-                <div>
-                    <p
-                        class="section-kicker"
-                        data-th="เรดาร์ฝน"
-                        data-en="Weather Radar"
-                    >
-                        เรดาร์ฝน
-                    </p>
-
-                    <h2
-                        data-th="🌧️ เรดาร์ตรวจจับกลุ่มฝน"
-                        data-en="🌧️ Animated Rain Radar"
-                    >
-                        🌧️ เรดาร์ตรวจจับกลุ่มฝน
-                    </h2>
-
-                    <p
-                        class="section-description"
-                        data-th="ภาพเคลื่อนไหวเรดาร์ล่าสุดบริเวณตำบลวัดธาตุและพื้นที่ใกล้เคียง"
-                        data-en="Latest animated radar around Wat That Subdistrict and nearby areas"
-                    >
-                        ภาพเคลื่อนไหวเรดาร์ล่าสุดบริเวณตำบลวัดธาตุและพื้นที่ใกล้เคียง
-                    </p>
-                </div>
-
+            <div class="card-update">
 
                 <span
-                    class="radar-badge"
-                    id="radar-badge"
+                    data-th="อัปเดตล่าสุด"
+                    data-en="Last updated"
                 >
-                    🔴 RADAR
+                    อัปเดตล่าสุด
                 </span>
+
+                <strong id="weather-update">
+                    --
+                </strong>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- RAIN -->
+
+        <article
+            id="rain-status"
+            class="glass-card rain-card"
+        >
+
+            <div class="card-heading">
+
+                <div class="heading-left">
+
+                    <span class="card-icon green">
+                        🌧️
+                    </span>
+
+                    <div>
+
+                        <h2
+                            data-th="สถานการณ์ฝน"
+                            data-en="Rain Situation"
+                        >
+                            สถานการณ์ฝน
+                        </h2>
+
+                        <p
+                            data-th="ติดตามสถานการณ์ฝนบริเวณตำบลวัดธาตุ"
+                            data-en="Rain monitoring around Wat That Subdistrict"
+                        >
+                            ติดตามสถานการณ์ฝนบริเวณตำบลวัดธาตุ
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
 
-            <div id="weather-radar"></div>
+            <div class="rain-summary">
 
+                <div class="rain-big-icon">
+                    🌧️
+                </div>
 
-            <div class="radar-controls">
+                <div>
 
-                <button
-                    id="radar-play"
-                    class="radar-button"
-                >
-                    ⏸ หยุด
-                </button>
-
-
-                <div class="radar-time-box">
-
-                    <span
-                        data-th="เวลาของภาพ:"
-                        data-en="Radar frame:"
+                    <small
+                        data-th="ปริมาณฝนขณะนี้"
+                        data-en="Current rainfall"
                     >
-                        เวลาของภาพ:
-                    </span>
+                        ปริมาณฝนขณะนี้
+                    </small>
 
-                    <strong id="radar-time">
-                        --
+                    <div class="rain-number">
+
+                        <span id="current-rain">
+                            --
+                        </span>
+
+                        <small>มม.</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="rain-stat-grid">
+
+                <div>
+
+                    <small
+                        data-th="ฝนรวมวันนี้"
+                        data-en="Today's rainfall"
+                    >
+                        ฝนรวมวันนี้
+                    </small>
+
+                    <strong>
+                        <span id="today-rain">--</span>
+                        mm
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <small
+                        data-th="ฝนรวมพยากรณ์ 7 วัน"
+                        data-en="7-day forecast rainfall"
+                    >
+                        ฝนรวมพยากรณ์ 7 วัน
+                    </small>
+
+                    <strong>
+                        <span id="seven-day-rain">--</span>
+                        mm
                     </strong>
 
                 </div>
@@ -340,57 +602,83 @@
             </div>
 
 
-            <p class="source-text">
-                Weather radar data ©
-                <a
-                    href="https://www.rainviewer.com/"
-                    target="_blank"
-                    rel="noopener"
-                >
-                    RainViewer
-                </a>
+            <div
+                id="rain-status-box"
+                class="rain-status-box"
+            >
+
+                <strong id="rain-status-text">
+                    กำลังตรวจสอบข้อมูล...
+                </strong>
+
+                <span id="rain-status-detail">
+                    --
+                </span>
+
+            </div>
+
+
+            <p
+                class="mini-disclaimer"
+                data-th="สถานะสีเป็นการสรุปเบื้องต้นเพื่อการแสดงผล ไม่ใช่ประกาศเตือนภัยอย่างเป็นทางการ"
+                data-en="Status colors are preliminary visual summaries and are not official warnings."
+            >
+                สถานะสีเป็นการสรุปเบื้องต้นเพื่อการแสดงผล
+                ไม่ใช่ประกาศเตือนภัยอย่างเป็นทางการ
             </p>
 
-        </section>
+        </article>
+
+    </section>
 
 
-        <!-- อ่างเก็บน้ำ -->
 
-        <section class="main-card reservoir-section">
+    <!-- =================================================
+         PM2.5 + RESERVOIR
+    ================================================== -->
 
-            <div class="section-header">
+    <section class="dashboard-grid two-column-grid second-row">
 
-                <div>
 
-                    <p
-                        class="section-kicker"
-                        data-th="สถานการณ์น้ำ"
-                        data-en="Water Situation"
-                    >
-                        สถานการณ์น้ำ
-                    </p>
+        <!-- PM2.5 -->
 
-                    <h2
-                        data-th="🏞️ อ่างเก็บน้ำบ้านเบิดใหญ่"
-                        data-en="🏞️ Ban Boet Yai Reservoir"
-                    >
-                        🏞️ อ่างเก็บน้ำบ้านเบิดใหญ่
-                    </h2>
+        <article
+            id="air-quality"
+            class="glass-card air-card"
+        >
 
-                    <p
-                        class="section-description"
-                        data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
-                        data-en="Wat That Subdistrict, Mueang Nong Khai District, Nong Khai Province"
-                    >
-                        ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย
-                    </p>
+            <div class="card-heading">
+
+                <div class="heading-left">
+
+                    <span class="card-icon purple">
+                        🌫️
+                    </span>
+
+                    <div>
+
+                        <h2
+                            data-th="คุณภาพอากาศและฝุ่น PM2.5"
+                            data-en="Air Quality & PM2.5"
+                        >
+                            คุณภาพอากาศและฝุ่น PM2.5
+                        </h2>
+
+                        <p
+                            data-th="บริเวณตำบลวัดธาตุ จังหวัดหนองคาย"
+                            data-en="Wat That Subdistrict, Nong Khai Province"
+                        >
+                            บริเวณตำบลวัดธาตุ จังหวัดหนองคาย
+                        </p>
+
+                    </div>
 
                 </div>
 
 
                 <span
-                    id="reservoir-status"
-                    class="reservoir-status"
+                    id="air-quality-status"
+                    class="air-status-badge"
                 >
                     กำลังโหลด...
                 </span>
@@ -398,7 +686,228 @@
             </div>
 
 
-            <div class="reservoir-center">
+
+            <div class="air-main">
+
+                <div class="air-circle">
+
+                    <small>PM2.5</small>
+
+                    <div>
+                        <span id="pm25">--</span>
+                    </div>
+
+                    <strong>
+                        µg/m³
+                    </strong>
+
+                </div>
+
+
+                <div class="air-side">
+
+                    <div class="air-side-item">
+
+                        <span>🌁</span>
+
+                        <div>
+
+                            <small>PM10</small>
+
+                            <strong>
+                                <span id="pm10">--</span>
+                                µg/m³
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="air-side-item">
+
+                        <span>🍃</span>
+
+                        <div>
+
+                            <small>
+                                US AQI
+                            </small>
+
+                            <strong id="air-aqi">
+                                --
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="air-side-item">
+
+                        <span>🕐</span>
+
+                        <div>
+
+                            <small
+                                data-th="ข้อมูลล่าสุด"
+                                data-en="Last updated"
+                            >
+                                ข้อมูลล่าสุด
+                            </small>
+
+                            <strong id="air-update">
+                                --
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="air-meter">
+
+                <div
+                    id="air-meter-marker"
+                    class="air-meter-marker"
+                ></div>
+
+            </div>
+
+
+            <div class="air-meter-labels">
+
+                <span
+                    data-th="ดี"
+                    data-en="Good"
+                >
+                    ดี
+                </span>
+
+                <span
+                    data-th="ปานกลาง"
+                    data-en="Moderate"
+                >
+                    ปานกลาง
+                </span>
+
+                <span
+                    data-th="เริ่มมีผลกระทบ"
+                    data-en="Unhealthy"
+                >
+                    เริ่มมีผลกระทบ
+                </span>
+
+                <span
+                    data-th="สูง"
+                    data-en="High"
+                >
+                    สูง
+                </span>
+
+            </div>
+
+
+            <div
+                id="air-quality-advice"
+                class="air-advice"
+            >
+                กำลังประเมินคุณภาพอากาศ...
+            </div>
+
+
+            <div class="air-model-warning">
+
+                <span>ℹ️</span>
+
+                <div>
+
+                    <strong
+                        data-th="หมายเหตุเกี่ยวกับแหล่งข้อมูล"
+                        data-en="Data source notice"
+                    >
+                        หมายเหตุเกี่ยวกับแหล่งข้อมูล
+                    </strong>
+
+                    <p
+                        data-th="ข้อมูลคุณภาพอากาศส่วนนี้เป็นข้อมูลแบบจำลอง ไม่ใช่ค่าจากสถานีตรวจวัด Air4Thai โดยตรง"
+                        data-en="This air-quality information is model-based data and is not a direct measurement from an Air4Thai monitoring station."
+                    >
+                        ข้อมูลคุณภาพอากาศส่วนนี้เป็นข้อมูลแบบจำลอง
+                        ไม่ใช่ค่าจากสถานีตรวจวัด Air4Thai โดยตรง
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <p class="source">
+                Model data: Open-Meteo / Copernicus Atmosphere Monitoring Service
+            </p>
+
+        </article>
+
+
+
+        <!-- RESERVOIR -->
+
+        <article
+            id="water"
+            class="glass-card reservoir-card"
+        >
+
+            <div class="card-heading">
+
+                <div class="heading-left">
+
+                    <span class="card-icon">
+                        💧
+                    </span>
+
+                    <div>
+
+                        <h2
+                            data-th="อ่างเก็บน้ำบ้านเบิดใหญ่"
+                            data-en="Ban Boet Yai Reservoir"
+                        >
+                            อ่างเก็บน้ำบ้านเบิดใหญ่
+                        </h2>
+
+                        <p
+                            data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย"
+                            data-en="Wat That Subdistrict, Mueang Nong Khai"
+                        >
+                            ตำบลวัดธาตุ อำเภอเมืองหนองคาย
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <span
+                    id="reservoir-status"
+                    class="reservoir-badge"
+                >
+                    กำลังโหลด...
+                </span>
+
+            </div>
+
+
+            <div class="reservoir-main">
+
+                <small
+                    data-th="ปริมาณน้ำปัจจุบัน"
+                    data-en="Current storage"
+                >
+                    ปริมาณน้ำปัจจุบัน
+                </small>
 
                 <div class="reservoir-percent">
 
@@ -408,30 +917,40 @@
 
                 </div>
 
-                <p
-                    data-th="ของความจุอ่างเก็บน้ำ"
-                    data-en="of total reservoir capacity"
+            </div>
+
+
+            <div class="water-progress">
+
+                <div
+                    id="water-progress-fill"
+                    class="water-progress-fill"
                 >
-                    ของความจุอ่างเก็บน้ำ
-                </p>
-
-
-                <div class="water-bar">
-
-                    <div
-                        id="water-bar-fill"
-                        class="water-bar-fill"
-                    >
-                    </div>
-
                 </div>
 
             </div>
 
 
-            <div class="reservoir-grid">
+            <div class="reservoir-stats">
 
-                <div class="data-box">
+                <div>
+
+                    <small
+                        data-th="ปริมาณน้ำ"
+                        data-en="Water volume"
+                    >
+                        ปริมาณน้ำ
+                    </small>
+
+                    <strong id="reservoir-volume">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div>
+
                     <small
                         data-th="ความจุอ่าง"
                         data-en="Capacity"
@@ -442,120 +961,326 @@
                     <strong id="reservoir-capacity">
                         --
                     </strong>
-                </div>
 
-
-                <div class="data-box">
-                    <small
-                        data-th="ปริมาณน้ำ"
-                        data-en="Water Volume"
-                    >
-                        ปริมาณน้ำ
-                    </small>
-
-                    <strong id="reservoir-volume">
-                        --
-                    </strong>
-                </div>
-
-
-                <div class="data-box">
-                    <small
-                        data-th="ตรวจสอบต้นทางเมื่อ"
-                        data-en="Source Checked"
-                    >
-                        ตรวจสอบต้นทางเมื่อ
-                    </small>
-
-                    <strong id="reservoir-update">
-                        --
-                    </strong>
                 </div>
 
             </div>
 
 
+            <div class="reservoir-update-box">
+
+                <small
+                    data-th="ตรวจสอบข้อมูลต้นทางเมื่อ"
+                    data-en="Source checked at"
+                >
+                    ตรวจสอบข้อมูลต้นทางเมื่อ
+                </small>
+
+                <strong id="reservoir-update">
+                    --
+                </strong>
+
+            </div>
+
+
             <p
-                class="source-text"
+                class="source"
                 data-th="ข้อมูล: ศูนย์ประมวลวิเคราะห์สถานการณ์น้ำ สำนักชลประทานที่ 5"
                 data-en="Source: Water Situation Analysis Center, Regional Irrigation Office 5"
             >
-                ข้อมูล: ศูนย์ประมวลวิเคราะห์สถานการณ์น้ำ สำนักชลประทานที่ 5
+                ข้อมูล: ศูนย์ประมวลวิเคราะห์สถานการณ์น้ำ
+                สำนักชลประทานที่ 5
             </p>
 
-        </section>
+        </article>
+
+    </section>
 
 
-        <!-- แหล่งน้ำ -->
 
-        <section class="main-card">
+    <!-- =================================================
+         7 DAY FORECAST
+    ================================================== -->
 
-            <p
-                class="section-kicker"
-                data-th="พื้นที่เฝ้าระวัง"
-                data-en="Local Water Sources"
-            >
-                พื้นที่เฝ้าระวัง
-            </p>
+    <section class="glass-card forecast-section">
 
-            <h2
-                data-th="💧 แหล่งน้ำในตำบลวัดธาตุ"
-                data-en="💧 Water Sources in Wat That Subdistrict"
-            >
-                💧 แหล่งน้ำในตำบลวัดธาตุ
-            </h2>
+        <div class="card-heading">
 
-            <p
-                class="section-description"
-                data-th="ข้อมูลฝนและสภาพอากาศบริเวณจุดอ้างอิงของแหล่งน้ำสำคัญ"
-                data-en="Weather and rainfall around reference points of major local water sources"
-            >
-                ข้อมูลฝนและสภาพอากาศบริเวณจุดอ้างอิงของแหล่งน้ำสำคัญ
-            </p>
+            <div class="heading-left">
+
+                <span class="card-icon">
+                    📅
+                </span>
+
+                <div>
+
+                    <h2
+                        data-th="พยากรณ์อากาศ 7 วันข้างหน้า"
+                        data-en="7-Day Weather Forecast"
+                    >
+                        พยากรณ์อากาศ 7 วันข้างหน้า
+                    </h2>
+
+                    <p
+                        data-th="ตำบลวัดธาตุ จังหวัดหนองคาย"
+                        data-en="Wat That Subdistrict, Nong Khai Province"
+                    >
+                        ตำบลวัดธาตุ จังหวัดหนองคาย
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
 
 
-            <div
-                id="water-locations"
-                class="water-grid"
-            >
-                กำลังโหลดข้อมูล...
+        <div
+            id="forecast"
+            class="forecast-grid"
+        >
+            กำลังโหลดข้อมูล...
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         RADAR
+    ================================================== -->
+
+    <section
+        id="radar"
+        class="glass-card radar-section"
+    >
+
+        <div class="card-heading">
+
+            <div class="heading-left">
+
+                <span class="card-icon green">
+                    📡
+                </span>
+
+                <div>
+
+                    <h2
+                        data-th="เรดาร์ตรวจจับกลุ่มฝน"
+                        data-en="Animated Rain Radar"
+                    >
+                        เรดาร์ตรวจจับกลุ่มฝน
+                    </h2>
+
+                    <p
+                        data-th="ภาพเรดาร์ย้อนหลังแบบเคลื่อนไหวจนถึงเฟรมล่าสุด"
+                        data-en="Animated recent radar frames up to the latest available image"
+                    >
+                        ภาพเรดาร์ย้อนหลังแบบเคลื่อนไหวจนถึงเฟรมล่าสุด
+                    </p>
+
+                </div>
+
             </div>
 
 
-            <p
-                class="notice"
-                data-th="* ข้อมูลส่วนนี้เป็นข้อมูลอากาศบริเวณจุดอ้างอิง ไม่ใช่เครื่องวัดระดับน้ำโดยตรง"
-                data-en="* These are weather reference points, not direct water-level gauges."
+            <span
+                id="radar-live"
+                class="radar-live"
             >
-                * ข้อมูลส่วนนี้เป็นข้อมูลอากาศบริเวณจุดอ้างอิง ไม่ใช่เครื่องวัดระดับน้ำโดยตรง
-            </p>
+                ● RADAR
+            </span>
 
-        </section>
+        </div>
 
 
-        <!-- แม่น้ำโขง -->
+        <div id="weather-radar"></div>
 
-        <section class="main-card">
 
-            <p
-                class="section-kicker"
-                data-th="แม่น้ำโขง"
-                data-en="Mekong River"
+        <div class="radar-footer">
+
+            <button
+                id="radar-play"
+                class="blue-button"
+                type="button"
             >
-                แม่น้ำโขง
-            </p>
+                ⏸ หยุด
+            </button>
 
-            <h2
-                data-th="🌊 สถานการณ์แม่น้ำโขง"
-                data-en="🌊 Mekong River Situation"
+
+            <div class="radar-time">
+
+                <span
+                    data-th="เวลาของภาพ"
+                    data-en="Radar image time"
+                >
+                    เวลาของภาพ
+                </span>
+
+                <strong id="radar-time">
+                    --
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="radar-scale">
+
+            <span
+                data-th="เบา"
+                data-en="Light"
             >
-                🌊 สถานการณ์แม่น้ำโขง
-            </h2>
+                เบา
+            </span>
+
+            <div class="scale-bar"></div>
+
+            <span
+                data-th="หนักมาก"
+                data-en="Very heavy"
+            >
+                หนักมาก
+            </span>
+
+        </div>
 
 
-            <div class="mekong-grid">
+        <p class="source">
+            Weather radar data © RainViewer
+        </p>
 
-                <div class="data-box">
+    </section>
+
+
+
+    <!-- =================================================
+         LOCAL WATER
+    ================================================== -->
+
+    <section class="glass-card local-water-section">
+
+        <div class="card-heading">
+
+            <div class="heading-left">
+
+                <span class="card-icon">
+                    💦
+                </span>
+
+                <div>
+
+                    <h2
+                        data-th="แหล่งน้ำในตำบลวัดธาตุ"
+                        data-en="Water Sources in Wat That Subdistrict"
+                    >
+                        แหล่งน้ำในตำบลวัดธาตุ
+                    </h2>
+
+                    <p
+                        data-th="ข้อมูลสภาพอากาศบริเวณจุดอ้างอิงของแหล่งน้ำสำคัญ"
+                        data-en="Weather around reference points of local water sources"
+                    >
+                        ข้อมูลสภาพอากาศบริเวณจุดอ้างอิงของแหล่งน้ำสำคัญ
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="water-locations"
+            class="local-water-grid"
+        >
+            กำลังโหลดข้อมูล...
+        </div>
+
+
+        <div
+            class="information-note"
+            data-th="หมายเหตุ: ข้อมูลฝนและสภาพอากาศส่วนนี้เป็นข้อมูลบริเวณจุดอ้างอิง ไม่ใช่ค่าระดับน้ำจากเครื่องตรวจวัดโดยตรง"
+            data-en="Note: Weather and rainfall values are based on reference points and are not direct water-level measurements."
+        >
+            หมายเหตุ: ข้อมูลฝนและสภาพอากาศส่วนนี้เป็นข้อมูลบริเวณจุดอ้างอิง
+            ไม่ใช่ค่าระดับน้ำจากเครื่องตรวจวัดโดยตรง
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         MEKONG
+    ================================================== -->
+
+    <section
+        id="mekong"
+        class="glass-card mekong-section"
+    >
+
+        <div class="card-heading">
+
+            <div class="heading-left">
+
+                <span class="card-icon">
+                    🌊
+                </span>
+
+                <div>
+
+                    <h2
+                        data-th="แม่น้ำโขง — สถานีหนองคาย"
+                        data-en="Mekong River — Nong Khai Station"
+                    >
+                        แม่น้ำโขง — สถานีหนองคาย
+                    </h2>
+
+                    <p
+                        data-th="สถานีตรวจวัดรหัส 012001"
+                        data-en="Monitoring station code 012001"
+                    >
+                        สถานีตรวจวัดรหัส 012001
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="mekong-grid">
+
+            <div class="mekong-cover">
+
+                <div class="mekong-overlay">
+
+                    <span>🌊</span>
+
+                    <strong
+                        data-th="ติดตามสถานการณ์แม่น้ำโขง"
+                        data-en="Monitor the Mekong River"
+                    >
+                        ติดตามสถานการณ์แม่น้ำโขง
+                    </strong>
+
+                    <small>
+                        Mekong River Commission
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="mekong-details">
+
+                <div class="mekong-data">
+
                     <small
                         data-th="สถานี"
                         data-en="Station"
@@ -569,13 +1294,15 @@
                     >
                         หนองคาย
                     </strong>
+
                 </div>
 
 
-                <div class="data-box">
+                <div class="mekong-data">
+
                     <small
                         data-th="รหัสสถานี"
-                        data-en="Station Code"
+                        data-en="Station code"
                     >
                         รหัสสถานี
                     </small>
@@ -583,57 +1310,77 @@
                     <strong>
                         012001
                     </strong>
+
+                </div>
+
+
+                <a
+                    href="https://monitoring.mrcmekong.org/station/012001"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="blue-button large-button"
+                    data-th="ดูข้อมูลล่าสุดจาก MRC →"
+                    data-en="View latest MRC data →"
+                >
+                    ดูข้อมูลล่าสุดจาก MRC →
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         CONTACT
+    ================================================== -->
+
+    <section
+        id="contact"
+        class="glass-card contact-section"
+    >
+
+        <div class="card-heading">
+
+            <div class="heading-left">
+
+                <span class="card-icon">
+                    🏛️
+                </span>
+
+                <div>
+
+                    <h2
+                        data-th="เทศบาลตำบลวัดธาตุ"
+                        data-en="Wat That Subdistrict Municipality"
+                    >
+                        เทศบาลตำบลวัดธาตุ
+                    </h2>
+
+                    <p
+                        data-th="ข้อมูลติดต่อและแผนที่สำนักงาน"
+                        data-en="Contact information and office map"
+                    >
+                        ข้อมูลติดต่อและแผนที่สำนักงาน
+                    </p>
+
                 </div>
 
             </div>
 
-
-            <a
-                class="primary-button"
-                href="https://monitoring.mrcmekong.org/station/012001"
-                target="_blank"
-                rel="noopener"
-                data-th="🌊 เปิดข้อมูลสถานีแม่น้ำโขง"
-                data-en="🌊 Open Mekong River Station"
-            >
-                🌊 เปิดข้อมูลสถานีแม่น้ำโขง
-            </a>
+        </div>
 
 
-            <p class="source-text">
-                Mekong River Commission (MRC)
-            </p>
+        <div class="contact-grid">
 
-        </section>
+            <div class="contact-info">
 
 
-        <!-- ติดต่อ -->
+                <div class="contact-row">
 
-        <section class="main-card">
-
-            <p
-                class="section-kicker"
-                data-th="ติดต่อเรา"
-                data-en="Contact"
-            >
-                ติดต่อเรา
-            </p>
-
-            <h2
-                data-th="🏛️ เทศบาลตำบลวัดธาตุ"
-                data-en="🏛️ Wat That Subdistrict Municipality"
-            >
-                🏛️ เทศบาลตำบลวัดธาตุ
-            </h2>
-
-
-            <div class="contact-grid">
-
-                <div class="contact-card">
-
-                    <div class="contact-icon">
-                        📍
-                    </div>
+                    <span>📍</span>
 
                     <div>
 
@@ -653,7 +1400,7 @@
 
                         <p
                             data-th="ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย"
-                            data-en="Wat That Subdistrict, Mueang Nong Khai District, Nong Khai Province"
+                            data-en="Wat That Subdistrict, Mueang Nong Khai, Nong Khai"
                         >
                             ตำบลวัดธาตุ อำเภอเมืองหนองคาย จังหวัดหนองคาย
                         </p>
@@ -663,11 +1410,9 @@
                 </div>
 
 
-                <div class="contact-card">
+                <div class="contact-row">
 
-                    <div class="contact-icon">
-                        ☎️
-                    </div>
+                    <span>☎️</span>
 
                     <div>
 
@@ -678,13 +1423,13 @@
                             โทรศัพท์
                         </small>
 
-                        <strong class="phone">
+                        <strong class="contact-phone">
                             042-414758
                         </strong>
 
                         <a
                             href="tel:042414758"
-                            class="small-button"
+                            class="blue-button"
                             data-th="โทรหาเทศบาล"
                             data-en="Call Municipality"
                         >
@@ -698,15 +1443,6 @@
             </div>
 
 
-            <h3
-                class="map-title"
-                data-th="🗺️ แผนที่เทศบาลตำบลวัดธาตุ"
-                data-en="🗺️ Municipality Map"
-            >
-                🗺️ แผนที่เทศบาลตำบลวัดธาตุ
-            </h3>
-
-
             <iframe
                 class="municipality-map"
                 src="https://www.google.com/maps?q=เทศบาลตำบลวัดธาตุ%20หนองคาย&output=embed"
@@ -716,53 +1452,62 @@
             >
             </iframe>
 
+        </div>
 
-            <a
-                class="primary-button"
-                href="https://www.google.com/maps/search/?api=1&query=เทศบาลตำบลวัดธาตุ+หนองคาย"
-                target="_blank"
-                rel="noopener"
-                data-th="📍 เปิด Google Maps เพื่อนำทาง"
-                data-en="📍 Open Google Maps"
-            >
-                📍 เปิด Google Maps เพื่อนำทาง
-            </a>
-
-        </section>
+    </section>
 
 
-    </main>
+</main>
 
 
-    <footer>
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-brand">
 
         <img
             src="images/logo.png"
-            alt="ตราเทศบาล"
+            alt="ตราเทศบาลตำบลวัดธาตุ"
         >
 
         <div>
+
             <strong
-                data-th="ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ"
-                data-en="Wat That Water & Weather Information Center"
+                data-th="เทศบาลตำบลวัดธาตุ"
+                data-en="Wat That Subdistrict Municipality"
             >
-                ศูนย์ข้อมูลน้ำและอากาศตำบลวัดธาตุ
+                เทศบาลตำบลวัดธาตุ
             </strong>
 
-            <p>
-                เทศบาลตำบลวัดธาตุ
-            </p>
+            <span
+                data-th="อำเภอเมืองหนองคาย จังหวัดหนองคาย"
+                data-en="Mueang Nong Khai, Nong Khai"
+            >
+                อำเภอเมืองหนองคาย จังหวัดหนองคาย
+            </span>
+
         </div>
 
-    </footer>
+    </div>
 
 
-    <script
-        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    ></script>
+    <div class="footer-phone">
+        ☎ 042-414758
+    </div>
 
-    <script src="script.js"></script>
+</footer>
+
+
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script src="script.js"></script>
 
 </body>
-
 </html>
